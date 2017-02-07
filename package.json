@@ -9,7 +9,9 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "test:ts": "    mocha --opts mocha-ts.opts || true",
-    "test": "tsc && mocha --opts mocha-js.opts || true"
+    "test": "tsc && mocha --opts mocha-js.opts || true",
+    "webpack:dist": "webpack --config webpack/browser-prod.js",
+    "webpack:dev": "webpack --config webpack/browser-dev.js"
   },
   "repository": {
     "type": "git",
@@ -39,7 +41,11 @@
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
     "mocha-typescript": "^1.0.15",
+    "ts-loader": "^2.0.0",
     "ts-node": "^2.0.0",
-    "typescript": "^2.1.5"
+    "typescript": "^2.1.5",
+    "webpack": "^2.2.1",
+    "webpack-merge": "^2.6.1",
+    "webpack-visualizer-plugin": "^0.1.10"
   }
 }
