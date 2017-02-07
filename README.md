@@ -8,6 +8,16 @@ A boilerplate for TypeScript / node.js project.
 
 #### Built-in scripts
 
+Webpack build:
+
+```bash
+# webpack without minification (lib-ts/browser-entrypoint.ts -> dev/browser-entrypoint.js)
+$ npm run webpack:dev
+
+# webpack *with minification (lib-ts/browser-entrypoint.ts -> dist/browser-entrypoint.min.js)
+$ npm run webpack:dist
+```
+
 Run as TypeScript (`*.ts` are compiled on the fly with [ts-node](https://github.com/TypeStrong/ts-node). Convinent for development):
 
 ```bash
