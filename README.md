@@ -1,48 +1,22 @@
-# node-typescript-boilerplate
+# toosimple
 
-A boilerplate for TypeScript / node.js project.
+Yet another simple-http-server
 
-- Latest `TypeScript 2.1`
-- Out-of-box test with `chai` / `mocha`
-- Can be easily extended for other JS runtime: Electron / ReactNative / etc
+# Features
 
-#### Built-in scripts
+- Drag-drop file uploading.
+- Modern UI
+- Small in size: packaged <1M (dependencies included)
 
-Webpack build:
-
-```bash
-# webpack without minification (lib-ts/browser-entrypoint.ts -> dev/browser-entrypoint.js)
-$ npm run webpack:dev
-
-# webpack *with minification (lib-ts/browser-entrypoint.ts -> dist/browser-entrypoint.min.js)
-$ npm run webpack:dist
-```
-
-Run as TypeScript (`*.ts` are compiled on the fly with [ts-node](https://github.com/TypeStrong/ts-node). Convinent for development):
+# How to use
 
 ```bash
-# run lib-ts/index.ts
-$ npm run start:ts
+$ npm install -g yafs
 
-# run tests in lib-ts/_test_
-$ npm run test:ts
+$ yafs
 ```
 
-Build and run JavaScript (recommended for production):
-
-```bash
-# compile lib-ts/**/*.ts to lib/
-$ npm run build
-
-# compile + watch for change
-$ npm run build:watch
-
-# run lib/index.js
-$ npm run start
-
-# run tests in lib/_test_
-$ npm run test
-```
+# Options
 
 #### License
 

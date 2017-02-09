@@ -1,7 +1,7 @@
 {
-  "name": "node-typescript-boilerplate",
+  "name": "toosimple",
   "version": "0.1.0",
-  "description": "A starting point for node.js & TypeScript application",
+  "description": "Yet another simple-http-server",
   "main": "index.js",
   "scripts": {
     "start": "node lib/index.js",
@@ -33,11 +33,14 @@
   },
   "homepage": "https://github.com/jokester/node-typescript-boilerplate#readme",
   "dependencies": {
+    "ecstatic": "^2.1.0",
     "tslib": "^1.5.0"
   },
   "devDependencies": {
+    "@types/argparse": "^1.0.30",
     "@types/chai": "^3.4.34",
-    "@types/node": "^6.0.60",
+    "@types/node": "^7.0.5",
+    "argparse": "^1.0.9",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
     "mocha-typescript": "^1.0.15",
