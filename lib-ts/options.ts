@@ -1,6 +1,5 @@
 import { ArgumentParser } from 'argparse';
 
-
 interface ParsedOptions {
     root: string;
     port: number;
@@ -49,10 +48,6 @@ export function createParser() {
     return parser as {
         parseArgs(): ParsedOptions
     };
-}
-
-function parseOptions(argv: string[]): Readonly<ParsedOptions> {
-    return null;
 }
 
 /**

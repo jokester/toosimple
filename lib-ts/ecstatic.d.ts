@@ -1,11 +1,13 @@
+/// <reference types="node" />
 
-interface Static {
+import { IncomingMessage, ServerResponse } from 'http';
+
+interface EcstaticStatic {
     (option?: EcstaticOption): HTTPHandler
 }
 
-// FIXME fix
 interface HTTPHandler {
-    (req: any, res: any, next?: Function): void
+    (req: IncomingMessage, res: ServerResponse, next?: () => void): void
 }
 
 /**
@@ -36,10 +38,8 @@ interface EcstaticOption {
     // FIXME: complete all options
 }
 
-declare const ecstatic: Static;
+declare const ecstatic: EcstaticStatic;
 
-declare module "ecstatic" {
-
-
-    export = ecstatic;
-}
+// declare module "ecstatic" {
+//     export = ecstatic;
+// }
