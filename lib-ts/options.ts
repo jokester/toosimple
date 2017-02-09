@@ -19,7 +19,6 @@ export function createParser() {
         {
             metavar: "PATH",
             defaultValue: process.cwd(),
-            nargs: 1,
             help: 'root of files, defaults to $PWD',
             dest: "root"
         }
@@ -40,14 +39,16 @@ export function createParser() {
         ['-b', '--bind'],
         {
             metavar: "IP",
-            defaultValue: null,
+            defaultValue: "0.0.0.0",
             help: "Network interface to serve on. Defaults to 0.0.0.0 / all interfaces.",
             dest: "bind",
             // action: "append",
         }
     )
 
-    return parser;
+    return parser as {
+        parseArgs(): ParsedOptions
+    };
 }
 
 function parseOptions(argv: string[]): Readonly<ParsedOptions> {

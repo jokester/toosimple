@@ -4,7 +4,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import ecstatic = require('ecstatic');
 
 interface HTTPHandler {
-    (req: IncomingMessage, res: ServerResponse, next: () => void): void
+    (req: IncomingMessage, res: ServerResponse, next?: () => void): void
 }
 
 export const handlerFactory = {
@@ -16,14 +16,16 @@ module HandlerFactory {
 
     export function combine(handlers: HTTPHandler[]): HTTPHandler {
         return (req, res, next) => {
-            // NOTE handlers should behave and call next() no more than once.
+            // NOTE handlers should behave and call next() once at most 
             let nextIndex = 0;
             const tryNextHandler = () => {
                 const nextHandler = handlers[nextIndex++];
                 if (nextHandler) {
                     nextHandler(req, res, tryNextHandler);
-                } else {
+                } else if (next) {
                     next();
+                } else {
+                    res.statusCode = 500;
                 }
             }
             tryNextHandler();
@@ -63,7 +65,7 @@ module HandlerFactory {
 /**
  *
  */
-export const createServer = (root: string) => (req: IncomingMessage, res: ServerResponse) => {
+export const createHandler = (root: string) => {
 
     return HandlerFactory.combine([
         HandlerFactory.staticHandler(root),
