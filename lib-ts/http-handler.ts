@@ -37,37 +37,54 @@ module HandlerFactory {
     export function indexHandler(root: string): HTTPHandler {
         return async (req, res, next) => {
             const urlPath = req.url;
+            console.log('urlPath', urlPath);
+
             if (!urlPath.endsWith('/'))
                 return next();
 
             // prohibit . / .. in path resolution for security
-            // NOTE we can use such URL for assets in previous handlers
+            // NOTE node.js does not normalize URL
+            // (browser often does that, but a crafted client may not)
             const pathParts = urlPath.split('/');
             if (pathParts.some(part => !!part.match(/^\.\.?$/))) {
                 res.statusCode = 403;
+                res.end();
                 return;
             }
 
             try {
-                console.log(urlPath);
                 const realPath = path.join(root, ...pathParts);
-                const items = await fsp.readdir(realPath);
+                const stat = await fsp.stat(realPath);
+                if (!stat.isDirectory()) {
+                    return next();
+                }
 
-                const itemsFull = await Promise.all(items.map(async name => {
+                const childNames = await fsp.readdir(realPath);
+                const children = await Promise.all(childNames.map(async name => {
                     const fullPath = path.join(realPath, name);
-                    const stat = await fsp.lstat(fullPath);
-                    const href = path.join(urlPath, name);
+                    const stat = await fsp.stat(fullPath);
+                    const nameWithSlash = stat.isDirectory() ? `${name}/` : name;
+                    const href = path.join(urlPath, nameWithSlash);
                     return {
-                        name: stat.isDirectory() ? `${name}/` : name,
-                        fullPath: fullPath,
+                        name: nameWithSlash,
                         href: href,
+                        isDir: stat.isDirectory(),
                     }
                 }));
+
+                if (urlPath !== '/') {
+                    children.unshift({
+                        name: "../",
+                        href: path.join(urlPath, '..'),
+                        isDir: true,
+                    })
+                }
 
                 const template = await fsp.readFile(path.join(__dirname, '..', 'assets', 'dir.html'));
                 const html = ejs.render(template.toString(), {
                     title: `${pathParts.slice(0, -1).join('/')} -- -□-□-`,
-                    items: itemsFull
+                    items: children,
+                    urlPath: urlPath,
                 });
                 res.end(html);
                 return;
@@ -100,6 +117,17 @@ module HandlerFactory {
             if (req.method !== "PUT") {
                 return next();
             }
+        }
+    }
+
+    /**
+     * serve static assets with another ecstatic middleware
+     */
+    export function assetHandler(assetRoot: string): HTTPHandler {
+        return (req, res, next) => {
+
+            res.statusCode = 500;
+            res.end();
         }
     }
 

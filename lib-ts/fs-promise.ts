@@ -5,3 +5,4 @@ import { Promisify } from './util';
 export const readdir = Promisify.toPromise1(fs.readdir);
 export const readFile = Promisify.toPromise1(fs.readFile);
 export const lstat = Promisify.toPromise1(fs.lstat);
+export const stat = Promisify.toPromise1(fs.stat);
