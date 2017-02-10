@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+/**
+ * CLI entrypoint for [toosimple](https://github.com/jokester/toosimple)
+ * @copyright Wang Guan
+ */
+"use strict";
+
+const main = require('../lib').main;
+main();

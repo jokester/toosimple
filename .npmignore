@@ -1,0 +1,9 @@
+dev
+dist
+lib-ts
+node_modules
+webpack
+mocha*
+lib/_test_
+lib/*.map
+tsconfig.json

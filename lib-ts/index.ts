@@ -2,7 +2,7 @@ import { createParser } from './options';
 import { createHandler } from './http-handler';
 import * as http from 'http';
 
-if (require.main === module) {
+export function main() {
     const parser = createParser();
     const args = parser.parseArgs();
     http
@@ -10,4 +10,8 @@ if (require.main === module) {
         .listen(args.port, args.bind, () => {
             console.log(`listening with options: ${JSON.stringify(args)}`);
         });
+}
+
+if (require.main === module) {
+    main();
 }

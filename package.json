@@ -15,24 +15,30 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jokester/node-typescript-boilerplate.git"
+    "url": "git+https://github.com/jokester/toosimple.git"
   },
   "keywords": [
     "nodejs",
-    "TypeScript",
-    "boilerplate"
+    "file server",
+    "TypeScript"
   ],
   "author": "Wang Guan <momocraft@gmail.com>",
   "license": "MIT",
-  "private": true,
   "bugs": {
-    "url": "https://github.com/jokester/node-typescript-boilerplate/issues"
+    "url": "https://github.com/jokester/toosimple/issues"
   },
+  "files": [
+    "bin",
+    "assets",
+    "lib/*.js"
+  ],
+  "bin": "./bin/toosimple",
   "engines": {
     "node": ">= 4.0.0"
   },
   "homepage": "https://github.com/jokester/node-typescript-boilerplate#readme",
   "dependencies": {
+    "argparse": "^1.0.9",
     "ecstatic": "^2.1.0",
     "ejs": "^2.5.5",
     "tslib": "^1.5.0"
