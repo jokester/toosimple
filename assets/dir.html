@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.2/pure.css" integrity="sha256-Ya9zPHSgqjRRb+L7LYPDfW91GdgBLKlBu1SydakM1l4="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.2/base.css" integrity="sha256-vbwKhUFf2rdUjvycHol+ipAN3fsCuAPCiFznay/ahVw="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="https://z1.zhimg.com/styles/573ac0fc.main.css">
+</head>
+
+<body>
+    <div class="pure-g" id="file-list">
+        <div class="pure-u-2-3">
+            <div class="part" id="file-list">
+                <ul>
+                    <% for(const item of items) { %>
+                        <li>
+                            <a download href="<%- item.href %>" title=<%- JSON.stringify(item.fullPath) %>><%= item.name %></a>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+        <div class="pure-u-1-3">
+            <div class="part" id="editor-control">
+                editor-control
+            </div>
+        </div>
+
+        <div class="pure-u-1-3">
+            <div class="part">
+                <div id="rendered" class="entry-content">rendered</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="browser-entrypoint.js"></script>
+</body>
+
+</html>
