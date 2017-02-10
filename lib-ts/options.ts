@@ -1,5 +1,6 @@
 import { ArgumentParser } from 'argparse';
 
+// FIXME add an option to disable uploading
 interface ParsedOptions {
     root: string;
     port: number;

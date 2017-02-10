@@ -37,7 +37,6 @@ module HandlerFactory {
     export function indexHandler(root: string): HTTPHandler {
         return async (req, res, next) => {
             const urlPath = req.url;
-            console.log('urlPath', urlPath);
 
             if (!urlPath.endsWith('/'))
                 return next();
@@ -52,6 +51,7 @@ module HandlerFactory {
                 return;
             }
 
+            // FIXME add an option to prohibit symlink
             try {
                 const realPath = path.join(root, ...pathParts);
                 const stat = await fsp.stat(realPath);
@@ -102,7 +102,6 @@ module HandlerFactory {
     /**
      * Static file handler
      *
-     * NOTE when directory `a` exists, this redirects `a` to `a/`
      */
     export function staticHandler(root: string): HTTPHandler {
         return ecstatic({

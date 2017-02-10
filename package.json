@@ -34,6 +34,7 @@
   "homepage": "https://github.com/jokester/node-typescript-boilerplate#readme",
   "dependencies": {
     "ecstatic": "^2.1.0",
+    "ejs": "^2.5.5",
     "tslib": "^1.5.0"
   },
   "devDependencies": {
