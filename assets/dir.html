@@ -34,7 +34,6 @@
                 bottom: 0px;
             }
         }
-
     </style>
 </head>
 
@@ -56,6 +55,13 @@
 
         <div id="upload-box" class="cell -4of12">
             <h1>Upload</h1>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="file" name="file[]" />
+                <input type="file" name="file[]" />
+                <input type="file" name="file[]" />
+                <input type="file" name="file[]" />
+                <input type="submit">Upload</submit>
+            </form>
         </div>
 
     </div>

@@ -40,6 +40,9 @@ module HandlerFactory {
             if (!urlPath.endsWith('/'))
                 return next();
 
+            if (req.method !== "GET")
+                return next();
+
             // prohibit . / .. in path resolution for security
             // NOTE node.js does not normalize URL
             // (browser often does that, but a crafted client may not)
@@ -112,11 +115,14 @@ module HandlerFactory {
     /**
      * File uploading handler
      */
-    export function uploadHandler(root: string): HTTPHandler {
+    export function formUploadHandler(root: string): HTTPHandler {
         return (req, res, next) => {
-            if (req.method !== "PUT") {
+            if (req.method !== "POST") {
                 return next();
             }
+
+            res.statusCode = 200;
+            res.end("NOT IMPLEMENTED");
         }
     }
 
@@ -150,6 +156,7 @@ export const createHandler = (root: string) => {
 
         // TODO serve assets (JS/CSS) or bind them in
         // HandlerFactory.assetHandler(),
+        HandlerFactory.formUploadHandler(root),
 
         // only use ecstatic for files
         HandlerFactory.staticHandler(root),
