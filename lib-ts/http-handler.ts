@@ -85,7 +85,7 @@ module HandlerFactory {
                     })
                 }
 
-                const template = await fsp.readFile(path.join(__dirname, '..', 'assets', 'dir.html'));
+                const template = await fsp.readFile(path.join(__dirname, '..', 'assets', 'dir.ejs.html'));
                 const html = ejs.render(template.toString(), {
                     title: `${pathParts.slice(0, -1).join('/')} -- -□-□-`,
                     items: children,
