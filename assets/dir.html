@@ -13,8 +13,6 @@
 
     <style type="text/css">
         #file-list {
-            min-height: calc(100vh - 120px);
-            max-height: calc(100vh - 120x);
             overflow-y: scroll;
         }
 
@@ -23,17 +21,34 @@
         #footer {
             padding: 4px;
         }
+
+        #footer {
+            display: none;
+        }
+
+        @media screen and (min-width:768px) {
+            #footer {
+                display: inline-block;
+                position: fixed;
+                right: 0px;
+                bottom: 0px;
+            }
+        }
+
     </style>
 </head>
 
 <body class="hack dark-grey">
     <div class="main container grid">
         <div id="file-list" class="cell -8of12">
-            <h1>Download</h1>
+            <h1>Files</h1>
+            <h3>
+                <%= urlPath %>
+            </h3>
             <ul>
                 <% for(const item of items) { %>
                     <li>
-                        <a download href="<%- item.href %>" title=<%- JSON.stringify(item.fullPath) %>><%= item.name %></a>
+                        <a <%= item.isDir ? "" : "download" %> href="<%- item.href %>" title=<%- JSON.stringify(item.href) %>><%= item.name %></a>
                     </li>
                     <% } %>
             </ul>
@@ -43,10 +58,11 @@
             <h1>Upload</h1>
         </div>
 
-        <div id="footer" class="cell -4of12">
-            <h6>Powered by <a href="https://github.com/jokester/toosimple">jokester/toosimple</a>
-            </h6>
-        </div>
+    </div>
+
+    <div id="footer">
+        <h6>Powered by <a href="https://github.com/jokester/toosimple">jokester/toosimple</a>
+        </h6>
     </div>
 </body>
 
