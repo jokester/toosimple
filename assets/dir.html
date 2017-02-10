@@ -48,7 +48,7 @@
             <ul>
                 <% for(const item of items) { %>
                     <li>
-                        <a <%= item.isDir ? "" : "download" %> href="<%- item.href %>" title=<%- JSON.stringify(item.href) %>><%= item.name %></a>
+                        <a <%= item.canDownload ? "download" : "" %> href="<%- item.href %>" title=<%- JSON.stringify(item.href) %>><%= item.name %></a>
                     </li>
                     <% } %>
             </ul>

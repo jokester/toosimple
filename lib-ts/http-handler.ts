@@ -65,10 +65,12 @@ module HandlerFactory {
                     const stat = await fsp.stat(fullPath);
                     const nameWithSlash = stat.isDirectory() ? `${name}/` : name;
                     const href = path.join(urlPath, nameWithSlash);
+                    const canDownload = !stat.isDirectory();
                     return {
                         name: nameWithSlash,
                         href: href,
                         isDir: stat.isDirectory(),
+                        canDownload: canDownload,
                     }
                 }));
 
@@ -77,6 +79,7 @@ module HandlerFactory {
                         name: "../",
                         href: path.join(urlPath, '..'),
                         isDir: true,
+                        canDownload: false,
                     })
                 }
 
