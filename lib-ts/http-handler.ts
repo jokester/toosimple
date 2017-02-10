@@ -2,8 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import * as path from 'path';
 import * as ejs from 'ejs';
 
-import { EcstaticStatic } from './ecstatic';
-const ecstatic = require('ecstatic') as EcstaticStatic;
+import * as servestatic from 'serve-static';
 
 import * as fsp from './fs-promise';
 
@@ -104,10 +103,9 @@ module HandlerFactory {
      *
      */
     export function staticHandler(root: string): HTTPHandler {
-        return ecstatic({
-            root: root,
-            autoIndex: false,
-            handleError: true,
+        return servestatic(root, {
+            dotfiles: "allow",
+            index: false,
         });
     }
 

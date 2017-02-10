@@ -39,8 +39,8 @@
   "homepage": "https://github.com/jokester/node-typescript-boilerplate#readme",
   "dependencies": {
     "argparse": "^1.0.9",
-    "ecstatic": "^2.1.0",
     "ejs": "^2.5.5",
+    "serve-static": "^1.11.2",
     "tslib": "^1.5.0"
   },
   "devDependencies": {
@@ -48,6 +48,7 @@
     "@types/chai": "^3.4.34",
     "@types/ejs": "^2.3.33",
     "@types/node": "^7.0.5",
+    "@types/serve-static": "^1.7.31",
     "argparse": "^1.0.9",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
