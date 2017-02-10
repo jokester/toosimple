@@ -13,13 +13,14 @@
 
     <style type="text/css">
         #file-list {
-            max-height: calc(100vh - 74px);
-            min-height: 50vh;
+            min-height: calc(100vh - 120px);
+            max-height: calc(100vh - 120x);
             overflow-y: scroll;
         }
 
         #file-list,
-        #upload-box {
+        #upload-box,
+        #footer {
             padding: 4px;
         }
     </style>
@@ -40,6 +41,11 @@
 
         <div id="upload-box" class="cell -4of12">
             <h1>Upload</h1>
+        </div>
+
+        <div id="footer" class="cell -4of12">
+            <h6>Powered by <a href="https://github.com/jokester/toosimple">jokester/toosimple</a>
+            </h6>
         </div>
     </div>
 </body>
