@@ -14,19 +14,26 @@ module HandlerFactory {
 
     export function combine(handlers: HTTPHandler[]): HTTPHandler {
         return (req, res, next) => {
-            // NOTE handlers should behave and call next() once at most 
-            let nextIndex = 0;
-            const tryNextHandler = () => {
-                const nextHandler = handlers[nextIndex++];
+            let handlerTried = 0;
+
+            const tryHandler = (handlerToTry: number) => {
+                if (handlerTried !== handlerToTry) {
+                    console.error(`HandlerFactory#combile: next() for handler#${handlerToTry - 1} is called more than once`);
+                    return;
+                }
+                const nextHandler = handlers[handlerTried++];
+
                 if (nextHandler) {
-                    nextHandler(req, res, tryNextHandler);
+                    nextHandler(req, res, () => {
+                        tryHandler(1 + handlerToTry);
+                    });
                 } else if (next) {
                     next();
                 } else {
                     res.statusCode = 500;
                 }
             }
-            tryNextHandler();
+            tryHandler(0);
         };
     }
 
