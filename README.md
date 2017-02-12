@@ -33,9 +33,8 @@ Optional arguments:
 
 # TODO
 
-- change ecstatic to [serve-static](), it's smaller.
-- webapp with history API, when JS is available
 - upload
+- webapp with history API, when JS is available
 
 #### License
 
