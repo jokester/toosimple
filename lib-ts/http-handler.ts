@@ -83,6 +83,7 @@ module HandlerFactory {
                     }
                 }));
 
+                // add link to ..
                 if (urlPath !== '/') {
                     children.unshift({
                         name: "../",
@@ -94,7 +95,7 @@ module HandlerFactory {
 
                 const template = await fsp.readFile(path.join(__dirname, '..', 'assets', 'dir.ejs.html'));
                 const html = ejs.render(template.toString(), {
-                    title: `${pathParts.slice(0, -1).join('/')} -- -□-□-`,
+                    title: `${pathParts.slice(0, -1).join('/') || '/'} - toosimple`,
                     items: children,
                     urlPath: urlPath,
                 });
