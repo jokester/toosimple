@@ -1,7 +1,10 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import * as path from 'path';
-import * as ejs from 'ejs';
+import * as util from 'util';
+import * as fs from 'fs';
 
+import * as ejs from 'ejs';
+import * as formidable from 'formidable';
 import * as servestatic from 'serve-static';
 
 import * as fsp from './fs-promise';
@@ -11,6 +14,24 @@ interface HTTPHandler {
 }
 
 module HandlerFactory {
+
+    /**
+     * whether path contains *no* '/../' or '.'
+     *
+     * Most UA normalizes URL and removes '/../' before sending it.
+     * (nodejs does not normalize URL).
+     * A crafted UA may not do so, which we have to reject for security.
+     *
+     * @param {string} urlPath
+     * @returns {boolean}
+     */
+    function isPathNormalized(urlPath: string): boolean {
+        // prohibit . / .. in path resolution for security
+        // NOTE node.js does not normalize URL
+        // (browser often does that, but a crafted client may not)
+        const pathParts = urlPath.split('/');
+        return !pathParts.some(part => !!part.match(/^\.\.?$/));
+    }
 
     export function combine(handlers: HTTPHandler[]): HTTPHandler {
         return (req, res, next) => {
@@ -46,19 +67,15 @@ module HandlerFactory {
 
             if (!urlPath.endsWith('/'))
                 return next();
-
-            if (req.method !== "GET")
+            else if (req.method !== "GET")
                 return next();
-
-            // prohibit . / .. in path resolution for security
-            // NOTE node.js does not normalize URL
-            // (browser often does that, but a crafted client may not)
-            const pathParts = urlPath.split('/');
-            if (pathParts.some(part => !!part.match(/^\.\.?$/))) {
+            else if (!isPathNormalized(urlPath)) {
                 res.statusCode = 403;
                 res.end();
                 return;
             }
+
+            const pathParts = urlPath.split('/');
 
             // FIXME add an option to prohibit symlink
             try {
@@ -124,13 +141,60 @@ module HandlerFactory {
      * File uploading handler
      */
     export function formUploadHandler(root: string): HTTPHandler {
+
         return (req, res, next) => {
+            const urlPath = req.url;
             if (req.method !== "POST") {
                 return next();
+            } else if (!urlPath.endsWith('/')) {
+                return next();
+            } else if (!isPathNormalized(urlPath)) {
+                res.statusCode = 403;
+                res.end();
+                return;
             }
 
-            res.statusCode = 200;
-            res.end("NOT IMPLEMENTED");
+            const pathParts = urlPath.split('/');
+            const fsPath = path.join(root, ...pathParts);
+
+            (async () => {
+                try {
+                    const form = new formidable.IncomingForm();
+                    form.multiples = true;
+                    // TODO we should create upload under root
+                    // form.uploadDir = await uploadTemp;
+                    const uploaded = await fsp.parseForm(form, req);
+
+                    // flatten file array
+                    const files: formidable.File[] = [];
+                    for (const fName in uploaded.files) {
+                        const f = uploaded.files[fName];
+                        // f maybe File[] or File
+                        if (f instanceof Array) {
+                            files.push(...f);
+                        } else {
+                            files.push(f);
+                        }
+                    }
+
+                    for (const f of files) {
+                        if (!f.size)
+                            continue;
+                        if (/\//.test(f.name)) {
+                            throw new Error(`illegal original filename: ${f.name}`);
+                        }
+                        const newPath = path.join(fsPath, f.name);
+                        await fsp.rename(f.path, newPath);
+                    }
+                    res.statusCode = 302;
+                    res.setHeader('Location', urlPath);
+                    res.end();
+                } catch (e) {
+                    res.statusCode = 500;
+                    res.end();
+                    console.error(e);
+                }
+            })();
         }
     }
 

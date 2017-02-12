@@ -1,6 +1,7 @@
 import { ArgumentParser } from 'argparse';
 
-// FIXME add an option to disable uploading
+// TODO add an option to disable uploading
+// TODO add an option to prevent file overwriting
 interface ParsedOptions {
     root: string;
     port: number;
