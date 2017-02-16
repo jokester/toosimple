@@ -2,10 +2,12 @@
 
 Yet another simple-http-server
 
+[![npm version](https://badge.fury.io/js/toosimple.svg)](https://www.npmjs.com/package/toosimple)
+
 # Features
 
 - Modern UI
-- Small in size: `< 1M` with all dependencies.
+- Small in size: around `1.5M` with all dependencies.
 
 # How to use
 
@@ -13,6 +15,9 @@ Yet another simple-http-server
 $ npm install -g toosimple
 
 $ toosimple
+listening with options: {"root":"/home/me/somewhere/","port":11131,"bind":"0.0.0.0"}
+
+// open "localhost:11131" in browser to see it
 ```
 
 # Command Line Options
@@ -33,8 +38,12 @@ Optional arguments:
 
 # TODO
 
-- upload
+- upload (working)
+- better console output: available IPs, access logs, etc
+- permission / authentication
+- serve assets from local instead of CDN
 - webapp with history API, when JS is available
+
 
 #### License
 
