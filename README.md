@@ -9,6 +9,10 @@ Yet another simple-http-server
 - Modern UI
 - Small in size: around `1.5M` with all dependencies.
 
+# Screenshot
+
+![https://github.com/jokester/toosimple/raw/master/screenshot.png](https://github.com/jokester/toosimple/raw/master/screenshot.png)
+
 # How to use
 
 ```bash
