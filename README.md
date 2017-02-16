@@ -46,8 +46,8 @@ Optional arguments:
 - better console output: available IPs, access logs, etc
 - permission / authentication
 - serve assets from local instead of CDN
-- webapp with history API, when JS is available
-
+- download/upload with javascript for smoothness
+    - webapp with history API, when JS is available
 
 #### License
 
