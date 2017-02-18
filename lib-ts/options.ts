@@ -2,9 +2,14 @@ import { ArgumentParser } from 'argparse';
 
 // TODO add an option to disable uploading
 // TODO add an option to prevent file overwriting
-interface ParsedOptions {
+export interface ParsedOptions {
     root: string;
     port: number;
+    /**
+     * NOTE listening to "::" will use 0.0.0.0 as well
+     * This behavior is referred to as "dual stack mode"
+     * @see https://github.com/nodejs/node/issues/7200
+     */
     bind: string;
 }
 
@@ -40,8 +45,8 @@ export function createParser() {
         ['-b', '--bind'],
         {
             metavar: "IP",
-            defaultValue: "0.0.0.0",
-            help: "Network interface to serve on. Defaults to 0.0.0.0 / all interfaces.",
+            defaultValue: "::",
+            help: "Network interface to listen on. Defaults to all interfaces.",
             dest: "bind",
             // action: "append",
         }

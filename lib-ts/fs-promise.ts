@@ -32,6 +32,13 @@ export function cp(oldPath: string, newPath: string) {
     });
 }
 
+/**
+ * mv: use POSIX rename first, and fallback to (cp + unlink)
+ *
+ * @export
+ * @param {string} oldPath
+ * @param {string} newPath
+ */
 export async function mv(oldPath: string, newPath: string) {
     try {
         await rename(oldPath, newPath);
