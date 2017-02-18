@@ -6,12 +6,12 @@
   "scripts": {
     "start": "node lib/index.js",
     "start:ts": "ts-node lib-ts/index.ts",
-    "build": "tsc",
-    "build:watch": "tsc --watch",
+    "build": "rm -rf lib/* && tsc",
+    "watch": "rm -rf lib/* && tsc --watch",
     "test:ts": "    mocha --opts mocha-ts.opts || true",
     "test": "tsc && mocha --opts mocha-js.opts || true",
     "tslint": "tslint -c tslint.json ts-lib/**/*.ts",
-    "webpack:dist": "webpack --config webpack/browser-prod.js",
+    "webpack:prod": "webpack --config webpack/browser-prod.js",
     "webpack:dev": "webpack --config webpack/browser-dev.js"
   },
   "repository": {
