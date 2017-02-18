@@ -185,7 +185,9 @@ module HandlerFactory {
                             throw new Error(`illegal original filename: ${f.name}`);
                         }
                         const newPath = path.join(fsPath, f.name);
-                        await fsp.rename(f.path, newPath);
+
+
+                        await fsp.mv(f.path, newPath);
                     }
                     res.statusCode = 302;
                     res.setHeader('Location', urlPath);
