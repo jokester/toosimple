@@ -1,4 +1,4 @@
-import { ArgumentParser } from 'argparse';
+import { ArgumentParser } from "argparse";
 
 // TODO add an option to disable uploading
 // TODO add an option to prevent file overwriting
@@ -15,23 +15,23 @@ export interface ParsedOptions {
 
 export function createParser() {
     const parser = new ArgumentParser({
-        version: require('../package.json').version,
+        version: require("../package.json").version,
         addHelp: true,
-        description: 'toosimple: Yet another simple-http-server'
+        description: "toosimple: Yet another simple-http-server"
     });
 
     parser.addArgument(
-        ['-r', '--root'],
+        ["-r", "--root"],
         {
             metavar: "PATH",
             defaultValue: process.cwd(),
-            help: 'root of files, defaults to $PWD',
+            help: "root of files, defaults to $PWD",
             dest: "root"
         }
     );
 
     parser.addArgument(
-        ['-p', '--port'],
+        ["-p", "--port"],
         {
             metavar: "PORT",
             defaultValue: 11131,
@@ -42,7 +42,7 @@ export function createParser() {
     );
 
     parser.addArgument(
-        ['-b', '--bind'],
+        ["-b", "--bind"],
         {
             metavar: "IP",
             defaultValue: "::",
@@ -50,7 +50,7 @@ export function createParser() {
             dest: "bind",
             // action: "append",
         }
-    )
+    );
 
     return parser as {
         parseArgs(): ParsedOptions
@@ -63,7 +63,7 @@ export function createParser() {
 if (require.main === module) {
     const parser = createParser();
     const args = parser.parseArgs();
-    console.log('parsed');
+    console.log("parsed");
     console.log(args);
     console.log(JSON.stringify(args));
 }

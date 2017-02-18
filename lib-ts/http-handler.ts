@@ -1,21 +1,21 @@
-import { IncomingMessage, ServerResponse } from 'http';
-import * as path from 'path';
-import * as util from 'util';
-import * as fs from 'fs';
+import { IncomingMessage, ServerResponse } from "http";
+import * as path from "path";
+import * as util from "util";
+import * as fs from "fs";
 
-import * as ejs from 'ejs';
-import * as formidable from 'formidable';
-import * as servestatic from 'serve-static';
+import * as ejs from "ejs";
+import * as formidable from "formidable";
+import * as servestatic from "serve-static";
 
-import * as fsp from './fs-promise';
+import * as fsp from "./fs-promise";
 
 interface HTTPHandler {
-    (req: IncomingMessage, res: ServerResponse, next?: () => void): void
+    (req: IncomingMessage, res: ServerResponse, next?: () => void): void;
 }
 
-const templateStr = fsp.readFile(path.join(__dirname, '..', 'assets', 'dir.ejs.html')).then(buf => buf.toString());
+const templateStr = fsp.readFile(path.join(__dirname, "..", "assets", "dir.ejs.html")).then(buf => buf.toString());
 
-module HandlerFactory {
+namespace HandlerFactory {
 
     /**
      * whether path contains *no* '/../' or '.'
@@ -31,7 +31,7 @@ module HandlerFactory {
         // prohibit . / .. in path resolution for security
         // NOTE node.js does not normalize URL
         // (browser often does that, but a crafted client may not)
-        const pathParts = urlPath.split('/');
+        const pathParts = urlPath.split("/");
         return !pathParts.some(part => !!part.match(/^\.\.?$/));
     }
 
@@ -55,7 +55,7 @@ module HandlerFactory {
                 } else {
                     res.statusCode = 500;
                 }
-            }
+            };
             tryHandler(0);
         };
     }
@@ -67,7 +67,7 @@ module HandlerFactory {
         return async (req, res, next) => {
             const urlPath = req.url;
 
-            if (!urlPath.endsWith('/'))
+            if (!urlPath.endsWith("/"))
                 return next();
             else if (req.method !== "GET")
                 return next();
@@ -77,7 +77,7 @@ module HandlerFactory {
                 return;
             }
 
-            const pathParts = urlPath.split('/');
+            const pathParts = urlPath.split("/");
 
             // FIXME add an option to prohibit symlink
             try {
@@ -99,21 +99,21 @@ module HandlerFactory {
                         href: href,
                         isDir: stat.isDirectory(),
                         canDownload: canDownload,
-                    }
+                    };
                 }));
 
                 // add link to ..
-                if (urlPath !== '/') {
+                if (urlPath !== "/") {
                     children.unshift({
                         name: "../",
-                        href: path.join(urlPath, '..'),
+                        href: path.join(urlPath, ".."),
                         isDir: true,
                         canDownload: false,
-                    })
+                    });
                 }
 
                 const html = ejs.render(await templateStr, {
-                    title: `${pathParts.slice(0, -1).join('/') || '/'} - toosimple`,
+                    title: `${pathParts.slice(0, -1).join("/") || "/"} - toosimple`,
                     items: children,
                     urlPath: urlPath,
                 });
@@ -147,7 +147,7 @@ module HandlerFactory {
             const urlPath = req.url;
             if (req.method !== "POST") {
                 return next();
-            } else if (!urlPath.endsWith('/')) {
+            } else if (!urlPath.endsWith("/")) {
                 return next();
             } else if (!isPathNormalized(urlPath)) {
                 res.statusCode = 403;
@@ -155,7 +155,7 @@ module HandlerFactory {
                 return;
             }
 
-            const pathParts = urlPath.split('/');
+            const pathParts = urlPath.split("/");
             const fsPath = path.join(root, ...pathParts);
 
             (async () => {
@@ -190,7 +190,7 @@ module HandlerFactory {
                         await fsp.mv(f.path, newPath);
                     }
                     res.statusCode = 302;
-                    res.setHeader('Location', urlPath);
+                    res.setHeader("Location", urlPath);
                     res.end();
                 } catch (e) {
                     res.statusCode = 500;
@@ -198,7 +198,7 @@ module HandlerFactory {
                     console.error(e);
                 }
             })();
-        }
+        };
     }
 
     /**
@@ -209,7 +209,7 @@ module HandlerFactory {
 
             res.statusCode = 500;
             res.end();
-        }
+        };
     }
 
     /**
@@ -219,7 +219,7 @@ module HandlerFactory {
         return (req, res, next) => {
             res.statusCode = 500;
             res.end();
-        }
+        };
     }
 }
 

@@ -1,5 +1,5 @@
-import { suite, test } from 'mocha-typescript';
-import { expect } from 'chai';
+import { suite, test } from "mocha-typescript";
+import { expect } from "chai";
 
 @suite class TestSuite {
     @test

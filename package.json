@@ -10,6 +10,7 @@
     "build:watch": "tsc --watch",
     "test:ts": "    mocha --opts mocha-ts.opts || true",
     "test": "tsc && mocha --opts mocha-js.opts || true",
+    "tslint": "tslint -c tslint.json ts-lib/**/*.ts",
     "webpack:dist": "webpack --config webpack/browser-prod.js",
     "webpack:dev": "webpack --config webpack/browser-dev.js"
   },
@@ -56,6 +57,7 @@
     "mocha-typescript": "^1.0.15",
     "ts-loader": "^2.0.0",
     "ts-node": "^2.0.0",
+    "tslint": "^4.4.2",
     "typescript": "^2.1.5",
     "webpack": "^2.2.1",
     "webpack-merge": "^2.6.1",

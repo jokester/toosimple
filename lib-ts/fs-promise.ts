@@ -4,10 +4,10 @@
  * (Overloaded function may get incorrect type after Promisify.toPromiseN)
  */
 
-import * as fs from 'fs';
-import { IncomingMessage, ServerResponse } from 'http';
+import * as fs from "fs";
+import { IncomingMessage, ServerResponse } from "http";
 
-import { Promisify } from './util';
+import { Promisify } from "./util";
 
 export const readdir = Promisify.toPromise1(fs.readdir);
 export const readFile = Promisify.toPromise1(fs.readFile);
@@ -24,10 +24,10 @@ export function cp(oldPath: string, newPath: string) {
         const readStream = fs.createReadStream(oldPath);
         const writeStream = fs.createWriteStream(newPath);
 
-        readStream.on('error', reject);
-        writeStream.on('error', reject);
+        readStream.on("error", reject);
+        writeStream.on("error", reject);
 
-        readStream.on('close', fulfill);
+        readStream.on("close", fulfill);
         readStream.pipe(writeStream);
     });
 }
@@ -43,7 +43,7 @@ export async function mv(oldPath: string, newPath: string) {
     try {
         await rename(oldPath, newPath);
     } catch (e) {
-        if (e && e.code === 'EXDEV') {
+        if (e && e.code === "EXDEV") {
             /**
              * on "EXDEV: cross-device link not permitted" error
              * fallback to cp + unlink
@@ -56,11 +56,10 @@ export async function mv(oldPath: string, newPath: string) {
     }
 }
 
-// FIXME rename this file
-import * as formidable from 'formidable';
+// FIXME rename this file: it's no longer 'fs' promises
+import * as formidable from "formidable";
 
-export function parseForm(parser: formidable.IncomingForm, req: IncomingMessage)
-    : Promise<{ fields: formidable.Fields, files: formidable.Files }> {
+export function parseForm(parser: formidable.IncomingForm, req: IncomingMessage): Promise<{ fields: formidable.Fields, files: formidable.Files }> {
     return new Promise((fulfill, reject) => {
         parser.parse(req, (err, fields, files) => {
             if (err) {
@@ -68,6 +67,6 @@ export function parseForm(parser: formidable.IncomingForm, req: IncomingMessage)
             } else {
                 fulfill({ fields: fields, files: files });
             }
-        })
+        });
     });
 }

@@ -1,7 +1,7 @@
-import { createParser, ParsedOptions } from './options';
-import { createHandler } from './http-handler';
-import * as http from 'http';
-import * as os from 'os';
+import { createParser, ParsedOptions } from "./options";
+import { createHandler } from "./http-handler";
+import * as http from "http";
+import * as os from "os";
 
 /**
  *
