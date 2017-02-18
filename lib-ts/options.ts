@@ -10,7 +10,7 @@ interface ParsedOptions {
 
 export function createParser() {
     const parser = new ArgumentParser({
-        version: '0.1.0',
+        version: require('../package.json').version,
         addHelp: true,
         description: 'toosimple: Yet another simple-http-server'
     });
