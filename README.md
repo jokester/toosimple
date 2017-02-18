@@ -25,6 +25,16 @@ Variants have their own branches:
 
 #### Built-in npm scripts
 
+Webpack build:
+
+```bash
+# webpack without minification (lib-ts/browser-entrypoint.ts -> dev/browser-entrypoint.js)
+$ npm run webpack:dev
+
+# webpack *with minification (lib-ts/browser-entrypoint.ts -> prod/browser-entrypoint.min.js)
+$ npm run webpack:prod
+```
+
 Run as TypeScript (`*.ts` are compiled on the fly with [ts-node](https://github.com/TypeStrong/ts-node). Convinent for development):
 
 ```bash
