@@ -1,6 +1,6 @@
 {
   "name": "toosimple",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Yet another simple-http-server",
   "main": "index.js",
   "scripts": {
