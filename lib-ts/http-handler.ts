@@ -13,6 +13,8 @@ interface HTTPHandler {
     (req: IncomingMessage, res: ServerResponse, next?: () => void): void
 }
 
+const templateStr = fsp.readFile(path.join(__dirname, '..', 'assets', 'dir.ejs.html')).then(buf => buf.toString());
+
 module HandlerFactory {
 
     /**
@@ -110,8 +112,7 @@ module HandlerFactory {
                     })
                 }
 
-                const template = await fsp.readFile(path.join(__dirname, '..', 'assets', 'dir.ejs.html'));
-                const html = ejs.render(template.toString(), {
+                const html = ejs.render(await templateStr, {
                     title: `${pathParts.slice(0, -1).join('/') || '/'} - toosimple`,
                     items: children,
                     urlPath: urlPath,
@@ -184,7 +185,9 @@ module HandlerFactory {
                             throw new Error(`illegal original filename: ${f.name}`);
                         }
                         const newPath = path.join(fsPath, f.name);
-                        await fsp.rename(f.path, newPath);
+
+
+                        await fsp.mv(f.path, newPath);
                     }
                     res.statusCode = 302;
                     res.setHeader('Location', urlPath);
