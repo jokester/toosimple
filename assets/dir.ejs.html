@@ -22,10 +22,6 @@
             padding: 4px;
         }
 
-        #upload-box {
-            display: none;
-        }
-
         #footer {
             display: none;
         }
@@ -43,7 +39,7 @@
 
 <body class="hack dark-grey">
     <div class="main container grid">
-        <div id="file-list" class="cell -12of12">
+        <div id="file-list" class="cell -8of12">
             <h1>Files</h1>
             <h3>
                 <%= urlPath %>
@@ -60,10 +56,10 @@
         <div id="upload-box" class="cell -4of12">
             <h1>Upload</h1>
             <form method="POST" enctype="multipart/form-data">
-                <input type="file" name="file[]" />
-                <input type="file" name="file[]" />
-                <input type="file" name="file1" multiple="multiple" />
-                <input type="submit">Upload</submit>
+                <p>
+                    <input type="file" name="file1" multiple="multiple" />
+                </p>
+                <input type="submit" value="Upload"></submit>
             </form>
         </div>
 
