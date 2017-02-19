@@ -6,4 +6,4 @@ tmp
 npm-*.log
 *.map
 dev/
-dist/
+prod/

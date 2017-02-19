@@ -12,10 +12,9 @@ module.exports = webpackMerge([
         'browser-entrypoint': path.join(__dirname, '..', 'lib-ts', 'browser-entrypoint.ts')
     },
     output: {
-        path: path.join(__dirname, '..', 'dist'),
+        path: path.join(__dirname, '..', 'prod'),
         filename: '[name].min.js',
         sourceMapFilename: '[name].map',
     },
   }
 ]);
-

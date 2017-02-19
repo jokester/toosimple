@@ -42,7 +42,6 @@ Optional arguments:
 
 # TODO
 
-- upload (working)
 - better console output: available IPs, access logs, etc
 - permission / authentication
 - serve assets from local instead of CDN
