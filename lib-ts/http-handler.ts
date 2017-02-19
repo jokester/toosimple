@@ -2,6 +2,7 @@ import { IncomingMessage, ServerResponse } from "http";
 import * as path from "path";
 import * as util from "util";
 import * as fs from "fs";
+import * as url from "url";
 
 import * as ejs from "ejs";
 import * as formidable from "formidable";
@@ -33,6 +34,29 @@ namespace HandlerFactory {
         // (browser often does that, but a crafted client may not)
         const pathParts = urlPath.split("/");
         return !pathParts.some(part => !!part.match(/^\.\.?$/));
+    }
+
+    export function dump(): HTTPHandler {
+        return (req, res, next) => {
+            console.info(`req URL: ${req.url}`);
+            next();
+        }
+    }
+
+    export function decodeReqURL(): HTTPHandler {
+        return (req, res, next) => {
+            try {
+                const before = req.url;
+                const parsed = url.parse(req.url);
+                const after = req.url = decodeURI(parsed.pathname);
+                // console.info(`decodeReqURL(): '${before}' => '${after}'`);
+                next();
+            } catch (e) {
+                console.error(e);
+                res.statusCode = 500;
+                res.end(`error decoding URL`);
+            }
+        }
     }
 
     export function combine(handlers: HTTPHandler[]): HTTPHandler {
@@ -186,7 +210,6 @@ namespace HandlerFactory {
                         }
                         const newPath = path.join(fsPath, f.name);
 
-
                         await fsp.mv(f.path, newPath);
                     }
                     res.statusCode = 302;
@@ -226,6 +249,9 @@ namespace HandlerFactory {
 export const createHandler = (root: string) => {
 
     return HandlerFactory.combine([
+        // Decode url
+        HandlerFactory.decodeReqURL(),
+
         // our custom index with precedence
         HandlerFactory.indexHandler(root),
 
