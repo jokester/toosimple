@@ -8,8 +8,8 @@
     "start:ts": "ts-node lib-ts/index.ts",
     "build": "rm -rf lib/* && tsc",
     "watch": "rm -rf lib/* && tsc --watch",
-    "test:ts": "    mocha --opts mocha-ts.opts || true",
-    "test": "tsc && mocha --opts mocha-js.opts || true",
+    "test:ts": "                    nyc mocha --opts mocha-ts.opts || true",
+    "test": "rm -rf lib/* && tsc && nyc mocha --opts mocha-js.opts || true",
     "tslint": "tslint -c tslint.json ts-lib/**/*.ts",
     "webpack:prod": "webpack --config webpack/browser-prod.js",
     "webpack:dev": "webpack --config webpack/browser-dev.js"
@@ -34,6 +34,20 @@
     "lib/*.js"
   ],
   "bin": "./bin/toosimple",
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx",
+      ".js",
+      ".jsx"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  },
   "engines": {
     "node": ">= 4.0.0"
   },
@@ -43,6 +57,7 @@
     "ejs": "^2.5.5",
     "formidable": "^1.1.1",
     "serve-static": "^1.11.2",
+    "preact": "^7.2.0",
     "tslib": "^1.5.0"
   },
   "devDependencies": {
@@ -52,13 +67,16 @@
     "@types/formidable": "^1.0.29",
     "@types/node": "^7.0.5",
     "@types/serve-static": "^1.7.31",
+    "@types/node": "^6.0.60",
+    "babili-webpack-plugin": "0.0.11",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
     "mocha-typescript": "^1.0.15",
+    "nyc": "^10.1.2",
     "ts-loader": "^2.0.0",
     "ts-node": "^2.0.0",
     "tslint": "^4.4.2",
-    "typescript": "^2.1.5",
+    "typescript": "^2.2.0",
     "webpack": "^2.2.1",
     "webpack-merge": "^2.6.1",
     "webpack-visualizer-plugin": "^0.1.10"

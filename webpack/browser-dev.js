@@ -9,7 +9,7 @@ module.exports = webpackMerge([
   require('./common.dev'),
   {
     entry: {
-        'browser-entrypoint': path.join(__dirname, '..', 'lib-ts', 'browser-entrypoint.ts')
+        'browser-entrypoint': path.join(__dirname, '..', 'lib-ts', 'browser-entrypoint.tsx')
     },
     output: {
         path: path.join(__dirname, '..', 'dev'),

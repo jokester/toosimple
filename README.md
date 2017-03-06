@@ -1,5 +1,7 @@
 # toosimple
 
+<!-- TODO logo -->
+
 Yet another simple-http-server
 
 [![npm version](https://badge.fury.io/js/toosimple.svg)](https://www.npmjs.com/package/toosimple)
