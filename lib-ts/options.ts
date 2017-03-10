@@ -1,7 +1,5 @@
 import { ArgumentParser } from "argparse";
 
-// TODO add an option to disable uploading
-// TODO add an option to prevent file overwriting
 export interface ParsedOptions {
     root: string;
     port: number;

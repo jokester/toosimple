@@ -1,3 +1,6 @@
+/**
+ *
+ */
 import * as preact from 'preact';
 import { DirItem } from './types';
 
@@ -15,16 +18,14 @@ class FileNavigator extends preact.Component<{}, {}> {
     }
 }
 
-
 const FileService = {
     async listDir(path: string): Promise<DirItem[]> {
-        return [];
+        return AJAX.getJSON<DirItem[]>(path, { 'X-toosimple-api': "listDir" });
     },
 
     async uploadFile(file: File, destPath: string): Promise<void> {
     }
 }
-
 
 namespace AJAX {
     type Dict<T> = { [key: string]: T };

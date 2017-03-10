@@ -3,6 +3,8 @@ import { createHandler } from "./http-handler";
 import * as http from "http";
 import * as os from "os";
 
+import { FS, Log } from './service';
+
 /**
  *
  *
@@ -43,7 +45,7 @@ export function main() {
     const parser = createParser();
     const args = parser.parseArgs();
     http
-        .createServer(createHandler(args.root))
+        .createServer(createHandler(FS.Acutal, Log.normal, args.root))
         .listen(args.port, args.bind, () => {
             console.log(`toosimple: server started`);
             console.log(`  root: ${args.root}`);
@@ -55,7 +57,7 @@ export function main() {
                 console.log(`  URL #${++addrNo}: ${addr}`);
             }
             if (addrNo === 0) {
-                console.log("  (If you are not seeing any, please check value of -b/--bind option)")
+                console.log("  (If you are not seeing any interfaces, please check value of -b/--bind option)")
             }
         });
 }
