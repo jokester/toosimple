@@ -25,6 +25,9 @@ export namespace Helper {
         // prohibit . / .. in path resolution for security
         // NOTE node.js does not normalize URL
         // (browser often does that, but a crafted client may not)
+        if (path.match('//'))
+            return false;
+
         const pathParts = path.split("/");
         return !pathParts.some(part => !!part.match(/^\.\.?$/));
     }
@@ -41,6 +44,21 @@ export namespace Helper {
                 }
             });
         });
+    }
+
+    export function getPath(urlStr: string) {
+    }
+
+    /**
+     * 
+     * @export
+     * @param {string} root root path in filesystem
+     * @param {string} urlStr path from a {IncomingMessage} object
+     * @returns filesystem path that corresponds to joined (root + normalizedPath)
+     * 
+     */
+    export function mappedPath(root: string, normalizedPath: string) {
+        return path.join(root, ...normalizedPath.split('/'));
     }
 }
 
@@ -67,6 +85,7 @@ namespace HandlerFactory {
     export function decodeReqURL(log: AbstractService.Log): HTTPHandler {
         return (req, res, next) => {
             try {
+                // NOTE this also drops query/hash from path
                 const before = req.url;
                 const parsed = url.parse(req.url);
                 const after = req.url = decodeURI(parsed.pathname);
@@ -95,8 +114,8 @@ namespace HandlerFactory {
     }
 
     /**
-     * Combile multi HTTPHandler(s) to one
-     * The new handler will use {@param handler} one by one.
+     * Combine multi HTTPHandler(s) into one
+     * The new handler will call handlers one by one.
      * @param {HTTPHandler[]} handlers
      * @returns {HTTPHandler}
      */
@@ -106,6 +125,7 @@ namespace HandlerFactory {
             tryHandler(0);
 
             function tryHandler(handlerToTry: number) {
+                // ensure that next() can only be called by current handler, at most once
                 if (handlerTried !== handlerToTry) {
                     log.error(`HandlerFactory#combile: next() for handler#${handlerToTry - 1} is called more than once`);
                     return;
@@ -126,9 +146,9 @@ namespace HandlerFactory {
     }
 
     /**
-     * Our handler that serves directory with custom template
+     * Our handler that serves directory with custom HTML template
      */
-    export function indexHandler(fs: AbstractService.FS, log: AbstractService.Log, root: string): HTTPHandler {
+    export function indexHTML(fs: AbstractService.FS, log: AbstractService.Log, root: string): HTTPHandler {
         const templateStr = fs.readText(path.join(__dirname, "..", "assets", "dir.ejs.html"), { encoding: 'utf-8' });
         return async (req, res, next) => {
             const urlPath = req.url;
@@ -140,40 +160,22 @@ namespace HandlerFactory {
 
             const pathParts = urlPath.split("/");
 
-            // FIXME add an option to prohibit symlink
             try {
-                const realPath = path.join(root, ...pathParts);
-                const stat = await fs.stat(realPath);
-                if (!stat.isDirectory()) {
-                    return next();
-                }
-
-                const childNames = await fs.readDir(realPath);
-                const children = await Promise.all(childNames.map(async name => {
-                    const fullPath = path.join(realPath, name);
-                    const stat = await fs.stat(fullPath);
-                    const nameWithSlash = stat.isDirectory() ? `${name}/` : name;
-                    const href = path.join(urlPath, nameWithSlash);
-                    const canDownload = !stat.isDirectory();
-                    return {
-                        name: nameWithSlash,
-                        href: href,
-                        isDir: stat.isDirectory(),
-                        canDownload: canDownload,
-                    };
-                }));
+                const realPath = Helper.mappedPath(root, req.url);
+                const children = await fs.readDirDetail(realPath);
 
                 // add link to ..
                 if (urlPath !== "/") {
                     children.unshift({
-                        name: "../",
-                        href: path.join(urlPath, ".."),
+                        name: "..",
                         isDir: true,
-                        canDownload: false,
+                        size: -1
                     });
                 }
 
+                // FIXME  render index as a service
                 const html = ejs.render(await templateStr, {
+                    // FIXME title may contain '//' form certain URL
                     title: `${pathParts.slice(0, -1).join("/") || "/"} - toosimple`,
                     items: children,
                     urlPath: urlPath,
@@ -186,6 +188,12 @@ namespace HandlerFactory {
 
             next();
         };
+    }
+
+    export function indexJSON(fs: AbstractService.FS, log: AbstractService.Log, root: string): HTTPHandler {
+        return async (req, res, next) => {
+            // TODO
+        }
     }
 
     /**
@@ -288,7 +296,7 @@ export const createHandler = (fs: AbstractService.FS, log: AbstractService.Log, 
         HandlerFactory.dumpReq(log),
 
         // our custom index with precedence
-        HandlerFactory.indexHandler(fs, log, root),
+        HandlerFactory.indexHTML(fs, log, root),
 
         // TODO serve assets (JS/CSS) or bind them in
         // HandlerFactory.assetHandler(),

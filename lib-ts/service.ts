@@ -3,9 +3,10 @@
  */
 import { Promisify } from './util';
 import * as fs from "fs";
+import * as path from "path";
 
-import * as formidable from "formidable";
 import { IncomingMessage, ServerResponse } from "http";
+import { DirItem } from './types';
 
 export namespace AbstractService {
     export type FS = FS.AbstractFS
@@ -13,6 +14,7 @@ export namespace AbstractService {
 }
 
 export namespace FS {
+
     export interface AbstractFS {
         cp(oldPath: string, newPath: string): Promise<void>
         mv(oldPath: string, newPath: string): Promise<void>
@@ -26,6 +28,7 @@ export namespace FS {
         mkdtemp(prefix: string): Promise<string>
         rmdir(path: string | Buffer): Promise<void>
         rename(oldPath: string, newPath: string): Promise<void>
+        readDirDetail(path: string): Promise<DirItem[]>
     }
 
     namespace $Impl {
@@ -78,6 +81,34 @@ export namespace FS {
         export const rmdir = Promisify.toPromise1v(fs.rmdir);
         // NOTE 'rename' (and POSIX 'rename' syscall) is limited to same filesystem.
         export const rename = Promisify.toPromise2v(fs.rename);
+
+        /**
+         * 
+         * 
+         * @export
+         * @param {string} dirName
+         * @returns {Promise<DirItem[]>} (name + isDir + size) of entries
+         */
+        export async function readDirDetail(dirName: string): Promise<DirItem[]> {
+            const s = await stat(dirName);
+            if (!s.isDirectory()) {
+                throw new Error(`expect directory at '${dirName}'`);
+            }
+
+            const childNames = await readDir(dirName);
+            const children = childNames.map(async name => {
+                const fullPath = path.join(dirName, name);
+                const childS = await stat(fullPath);
+                const childItem: DirItem = {
+                    name: name,
+                    isDir: childS.isDirectory(),
+                    size: childS.isDirectory() ? NaN : childS.size
+                };
+                return childItem;
+            });
+
+            return Promise.all(children);
+        }
     }
 
     /**
