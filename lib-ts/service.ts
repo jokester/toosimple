@@ -8,6 +8,7 @@ import * as ejs from "ejs";
 
 import { IncomingMessage, ServerResponse } from "http";
 import { DirItem } from './types';
+import { renderIndex } from './server-rendering';
 
 export namespace AbstractService {
     export type FS = FS.AbstractFS
@@ -75,7 +76,26 @@ export namespace Render {
         }
     }
 
+    namespace PreactServerRendering {
+        export async function dirIndex(template: string, fsPath: string, fsRoot: string, items: DirItem[]) {
+            return renderIndex({
+                title: "TITLE",
+                urlPath: "URLPATH",
+                items: items.map(i => {
+                    const name = i.isDir ? `${i.name}/` : i.name;
+                    return {
+                        href: name,
+                        canDownload: !i.isDir,
+                        title: name,
+                        name: name,
+                    }
+                })
+            })
+        }
+    }
+
     export const Actual: AbstractRender = $Impl
+    export const Preact: AbstractRender = PreactServerRendering
 }
 
 export namespace FS {

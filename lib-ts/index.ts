@@ -45,7 +45,7 @@ export function main() {
     const parser = createParser();
     const args = parser.parseArgs();
     http
-        .createServer(createHandler(FS.Acutal, Log.normal, Render.Actual, args.root))
+        .createServer(createHandler(FS.Acutal, Log.normal, Render.Preact, args.root))
         .listen(args.port, args.bind, () => {
             console.log(`toosimple: server started`);
             console.log(`  root: ${args.root}`);

@@ -168,15 +168,8 @@ namespace HandlerFactory {
                 realPath,
                 root,
                 children)
-                // add link to ..
-                if (urlPath !== "/") {
-                    children.unshift({
-                        name: "..",
-                        isDir: true,
-                        size: -1
-                    });
-                }
 
+                res.setHeader('Content-Type', 'text/html');
                 res.end(html);
                 return;
             } catch (e) {
