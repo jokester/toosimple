@@ -79,8 +79,8 @@ export namespace Render {
     namespace PreactServerRendering {
         export async function dirIndex(template: string, fsPath: string, fsRoot: string, items: DirItem[]) {
             return renderIndex({
-                title: "TITLE",
-                urlPath: "URLPATH",
+                title: `${path.relative(fsRoot, fsPath)}/`,
+                fsPath: fsPath,
                 items: items.map(i => {
                     const name = i.isDir ? `${i.name}/` : i.name;
                     return {
