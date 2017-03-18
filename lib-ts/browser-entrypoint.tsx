@@ -3,6 +3,7 @@
  */
 import * as preact from 'preact';
 import { DirItem } from './types';
+import { render } from 'preact-render-to-string'
 
 class Greeting extends preact.Component<{}, {}> {
     render() {
@@ -71,3 +72,5 @@ namespace AJAX {
     }
 
 }
+
+console.log("RENDERED", render(<Greeting />));
