@@ -2,20 +2,11 @@
  * Components for server rendering
  */
 import * as preact from 'preact';
-import { DirItem } from './types';
+import { DirItem, IndexParam } from './types';
 import { render } from 'preact-render-to-string'
 import { FileList } from './components';
 
-interface IndexPageProps {
-    title: string
-    fsPath: string
-    items: {
-        href: string
-        canDownload: boolean
-        title: string
-        name: string
-    }[]
-}
+type IndexPageProps = IndexParam
 
 class IndexPage extends preact.Component<IndexPageProps, {}> {
     render(props: IndexPageProps) {

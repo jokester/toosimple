@@ -2,7 +2,7 @@
  *
  */
 import * as preact from 'preact';
-import { DirItem } from './types';
+import { DirItem, IndexParam } from './types';
 import { render } from 'preact-render-to-string'
 
 class Greeting extends preact.Component<{}, {}> {
@@ -12,6 +12,7 @@ class Greeting extends preact.Component<{}, {}> {
 }
 
 preact.render(<Greeting />, document.body);
+
 
 namespace AJAX {
 
@@ -67,3 +68,5 @@ namespace AJAX {
         })
     }
 }
+
+AJAX.listDir("/").then(l => console.log("AJAX.listDir", l));

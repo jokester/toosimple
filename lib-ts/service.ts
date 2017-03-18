@@ -7,7 +7,7 @@ import * as path from "path";
 import * as ejs from "ejs";
 
 import { IncomingMessage, ServerResponse } from "http";
-import { DirItem } from './types';
+import { DirItem, IndexParam } from './types';
 import { renderIndex } from './server-rendering';
 
 export namespace AbstractService {
@@ -28,22 +28,18 @@ export namespace Render {
          * @returns {Promise<string>}
          *
          * @memberOf AbstractRender
+         *
+         * FIXME remove "template"
          */
         dirIndex(template: string, fsPath: string, fsRoot: string, items: DirItem[]): Promise<string>
     }
 
-    interface TemplateVar {
-        title: string
-        urlPath: string
-        items: {
-            href: string
-            canDownload: boolean
-            title: string
-            name: string
-        }[]
-    }
+    type TemplateVar = IndexParam
 
-    namespace $Impl {
+    /**
+     * @deprecated
+     */
+    namespace EjsImpl {
         export async function dirIndex(template: string, fsPath: string, fsRoot: string, items: DirItem[]) {
             const relPath = path.relative(fsRoot, fsPath);
             if (relPath.startsWith('..')) {
@@ -61,7 +57,7 @@ export namespace Render {
 
             const interpolate: TemplateVar = {
                 title: `${relPath}/`,
-                urlPath: fsPath,
+                fsPath: fsPath,
                 items: items.map(i => {
                     const name = i.isDir ? `${i.name}/` : i.name;
                     return {
@@ -94,7 +90,7 @@ export namespace Render {
         }
     }
 
-    export const Actual: AbstractRender = $Impl
+    export const Actual: AbstractRender = EjsImpl
     export const Preact: AbstractRender = PreactServerRendering
 }
 
@@ -187,7 +183,9 @@ export namespace FS {
                 const childItem: DirItem = {
                     name: name,
                     isDir: childS.isDirectory(),
-                    size: childS.isDirectory() ? NaN : childS.size
+                    // -1 works better with JSON
+                    // NaN will be serialized to `null`
+                    size: childS.isDirectory() ? -1 : childS.size
                 };
                 return childItem;
             });
