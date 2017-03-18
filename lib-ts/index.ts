@@ -3,7 +3,7 @@ import { createHandler } from "./http-handler";
 import * as http from "http";
 import * as os from "os";
 
-import { FS, Log } from './service';
+import { FS, Log, Render } from './service';
 
 /**
  *
@@ -45,7 +45,7 @@ export function main() {
     const parser = createParser();
     const args = parser.parseArgs();
     http
-        .createServer(createHandler(FS.Acutal, Log.normal, args.root))
+        .createServer(createHandler(FS.Acutal, Log.normal, Render.Actual, args.root))
         .listen(args.port, args.bind, () => {
             console.log(`toosimple: server started`);
             console.log(`  root: ${args.root}`);

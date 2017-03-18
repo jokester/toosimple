@@ -148,7 +148,7 @@ namespace HandlerFactory {
     /**
      * Our handler that serves directory with custom HTML template
      */
-    export function indexHTML(fs: AbstractService.FS, log: AbstractService.Log, root: string): HTTPHandler {
+    export function indexHTML(fs: AbstractService.FS, log: AbstractService.Log, render: AbstractService.Render, root: string): HTTPHandler {
         const templateStr = fs.readText(path.join(__dirname, "..", "assets", "dir.ejs.html"), { encoding: 'utf-8' });
         return async (req, res, next) => {
             const urlPath = req.url;
@@ -164,6 +164,10 @@ namespace HandlerFactory {
                 const realPath = Helper.mappedPath(root, req.url);
                 const children = await fs.readDirDetail(realPath);
 
+                const html = await render.dirIndex(await templateStr,
+                realPath,
+                root,
+                children)
                 // add link to ..
                 if (urlPath !== "/") {
                     children.unshift({
@@ -173,17 +177,12 @@ namespace HandlerFactory {
                     });
                 }
 
-                // FIXME  render index as a service
-                const html = ejs.render(await templateStr, {
-                    // FIXME title may contain '//' form certain URL
-                    title: `${pathParts.slice(0, -1).join("/") || "/"} - toosimple`,
-                    items: children,
-                    urlPath: urlPath,
-                });
                 res.end(html);
                 return;
             } catch (e) {
                 log.error(e);
+                res.statusCode = 500;
+                res.end();
             }
 
             next();
@@ -285,7 +284,9 @@ namespace HandlerFactory {
     }
 }
 
-export const createHandler = (fs: AbstractService.FS, log: AbstractService.Log, root: string) => {
+export const createHandler = (fs: AbstractService.FS, log: AbstractService.Log,
+    render: AbstractService.Render,
+    root: string) => {
 
     return HandlerFactory.combine(log, [
 
@@ -296,7 +297,7 @@ export const createHandler = (fs: AbstractService.FS, log: AbstractService.Log, 
         HandlerFactory.dumpReq(log),
 
         // our custom index with precedence
-        HandlerFactory.indexHTML(fs, log, root),
+        HandlerFactory.indexHTML(fs, log, render, root),
 
         // TODO serve assets (JS/CSS) or bind them in
         // HandlerFactory.assetHandler(),
