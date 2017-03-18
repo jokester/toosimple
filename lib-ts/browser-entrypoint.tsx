@@ -2,7 +2,8 @@
  *
  */
 import * as preact from 'preact';
-import { DirItem } from './types';
+import { DirItem, IndexParam } from './types';
+import { render } from 'preact-render-to-string'
 
 class Greeting extends preact.Component<{}, {}> {
     render() {
@@ -12,26 +13,23 @@ class Greeting extends preact.Component<{}, {}> {
 
 preact.render(<Greeting />, document.body);
 
-class FileNavigator extends preact.Component<{}, {}> {
-    render() {
-        return <p>ho</p>
-    }
-}
-
-const FileService = {
-    async listDir(path: string): Promise<DirItem[]> {
-        return AJAX.getJSON<DirItem[]>(path, { 'X-toosimple-api': "listDir" });
-    },
-
-    async uploadFile(file: File, destPath: string): Promise<void> {
-    }
-}
 
 namespace AJAX {
+
+    export async function listDir(path: string): Promise<DirItem[]> {
+        return getJSON<DirItem[]>(path, { 'X-toosimple-api': "listDir" });
+    }
+
+    export async function uploadFile(file: File, destPath: string): Promise<void> {
+        throw "NOT IMPLEMENTED";
+    }
+
+    //////////////////////////////
+
     type Dict<T> = { [key: string]: T };
     type XhrDecorator = (xhr: XMLHttpRequest) => void;
 
-    export function getJSON<T>(url: string, headers?: Dict<string>): Promise<T> {
+    function getJSON<T>(url: string, headers?: Dict<string>): Promise<T> {
         return getText(url, headers)
             .then(jsonStr => JSON.parse(jsonStr) as T);
     }
@@ -69,5 +67,6 @@ namespace AJAX {
             }
         })
     }
-
 }
+
+AJAX.listDir("/").then(l => console.log("AJAX.listDir", l));

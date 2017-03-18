@@ -1,7 +1,6 @@
 import { IncomingMessage, ServerResponse } from "http";
 import * as path from "path";
 import * as url from "url";
-import * as ejs from "ejs";
 import * as formidable from "formidable";
 import * as servestatic from "serve-static";
 
@@ -149,7 +148,6 @@ namespace HandlerFactory {
      * Our handler that serves directory with custom HTML template
      */
     export function indexHTML(fs: AbstractService.FS, log: AbstractService.Log, render: AbstractService.Render, root: string): HTTPHandler {
-        const templateStr = fs.readText(path.join(__dirname, "..", "assets", "dir.ejs.html"), { encoding: 'utf-8' });
         return async (req, res, next) => {
             const urlPath = req.url;
 
@@ -158,25 +156,13 @@ namespace HandlerFactory {
             else if (req.method !== "GET")
                 return next();
 
-            const pathParts = urlPath.split("/");
-
             try {
                 const realPath = Helper.mappedPath(root, req.url);
                 const children = await fs.readDirDetail(realPath);
 
-                const html = await render.dirIndex(await templateStr,
-                realPath,
-                root,
-                children)
-                // add link to ..
-                if (urlPath !== "/") {
-                    children.unshift({
-                        name: "..",
-                        isDir: true,
-                        size: -1
-                    });
-                }
+                const html = await render.dirIndex(realPath, root, children);
 
+                res.setHeader('Content-Type', 'text/html');
                 res.end(html);
                 return;
             } catch (e) {
@@ -191,7 +177,25 @@ namespace HandlerFactory {
 
     export function indexJSON(fs: AbstractService.FS, log: AbstractService.Log, root: string): HTTPHandler {
         return async (req, res, next) => {
-            // TODO
+            const urlPath = req.url;
+
+            if (!urlPath.endsWith("/"))
+                return next();
+            else if (req.method !== "GET")
+                return next();
+            else if (req.headers['x-toosimple-api'] !== "listDir")
+                return next();
+
+            try {
+                const realPath = Helper.mappedPath(root, urlPath);
+                const items = await fs.readDirDetail(realPath);
+                res.setHeader("content-type", "application/json");
+                res.end(JSON.stringify(items));
+            } catch (e) {
+                log.error(`indexJSON: failed to serve urlPath`);
+                res.statusCode = 500;
+                res.end();
+            }
         }
     }
 
@@ -296,10 +300,13 @@ export const createHandler = (fs: AbstractService.FS, log: AbstractService.Log,
 
         HandlerFactory.dumpReq(log),
 
+        HandlerFactory.indexJSON(fs, log, root),
+
         // our custom index with precedence
         HandlerFactory.indexHTML(fs, log, render, root),
 
-        // TODO serve assets (JS/CSS) or bind them in
+        // TODO serve assets (JS/CSS) or embed them in html
+
         // HandlerFactory.assetHandler(),
         HandlerFactory.formUploadHandler(fs, log, root),
 

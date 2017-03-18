@@ -4,10 +4,10 @@
 import { Promisify } from './util';
 import * as fs from "fs";
 import * as path from "path";
-import * as ejs from "ejs";
 
 import { IncomingMessage, ServerResponse } from "http";
-import { DirItem } from './types';
+import { DirItem, IndexParam } from './types';
+import { renderIndex } from './server-rendering';
 
 export namespace AbstractService {
     export type FS = FS.AbstractFS
@@ -28,22 +28,13 @@ export namespace Render {
          *
          * @memberOf AbstractRender
          */
-        dirIndex(template: string, fsPath: string, fsRoot: string, items: DirItem[]): Promise<string>
+        dirIndex(fsPath: string, fsRoot: string, items: DirItem[]): Promise<string>
     }
 
-    interface TemplateVar {
-        title: string
-        urlPath: string
-        items: {
-            href: string
-            canDownload: boolean
-            title: string
-            name: string
-        }[]
-    }
+    type TemplateVar = IndexParam
 
-    namespace $Impl {
-        export async function dirIndex(template: string, fsPath: string, fsRoot: string, items: DirItem[]) {
+    namespace PreactServerRendering {
+        export async function dirIndex(fsPath: string, fsRoot: string, items: DirItem[]) {
             const relPath = path.relative(fsRoot, fsPath);
             if (relPath.startsWith('..')) {
                 throw new Error(`${fsPath} is outside ${fsRoot}`);
@@ -58,9 +49,9 @@ export namespace Render {
                 }].concat(items);
             }
 
-            const interpolate: TemplateVar = {
-                title: `${relPath}/`,
-                urlPath: fsPath,
+            return renderIndex({
+                title: `${path.relative(fsRoot, fsPath)}/`,
+                fsPath: fsPath,
                 items: items.map(i => {
                     const name = i.isDir ? `${i.name}/` : i.name;
                     return {
@@ -69,13 +60,12 @@ export namespace Render {
                         title: name,
                         name: name,
                     }
-                }),
-            }
-            return ejs.render(template, interpolate);
+                })
+            })
         }
     }
 
-    export const Actual: AbstractRender = $Impl
+    export const Preact: AbstractRender = PreactServerRendering
 }
 
 export namespace FS {
@@ -167,7 +157,9 @@ export namespace FS {
                 const childItem: DirItem = {
                     name: name,
                     isDir: childS.isDirectory(),
-                    size: childS.isDirectory() ? NaN : childS.size
+                    // -1 works better with JSON
+                    // NaN will be serialized to `null`
+                    size: childS.isDirectory() ? -1 : childS.size
                 };
                 return childItem;
             });

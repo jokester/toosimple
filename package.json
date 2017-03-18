@@ -55,20 +55,18 @@
   "homepage": "https://github.com/jokester/toosimple#readme",
   "dependencies": {
     "argparse": "^1.0.9",
-    "ejs": "^2.5.5",
     "formidable": "^1.1.1",
-    "serve-static": "^1.11.2",
     "preact": "^7.2.0",
+    "preact-render-to-string": "^3.6.0",
+    "serve-static": "^1.11.2",
     "tslib": "^1.5.0"
   },
   "devDependencies": {
     "@types/argparse": "^1.0.30",
     "@types/chai": "^3.4.34",
-    "@types/ejs": "^2.3.33",
     "@types/formidable": "^1.0.29",
-    "@types/node": "^7.0.5",
-    "@types/serve-static": "^1.7.31",
     "@types/node": "^6.0.60",
+    "@types/serve-static": "^1.7.31",
     "babili-webpack-plugin": "0.0.11",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
