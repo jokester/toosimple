@@ -4,7 +4,6 @@
 import { Promisify } from './util';
 import * as fs from "fs";
 import * as path from "path";
-import * as ejs from "ejs";
 
 import { IncomingMessage, ServerResponse } from "http";
 import { DirItem, IndexParam } from './types';
@@ -28,19 +27,14 @@ export namespace Render {
          * @returns {Promise<string>}
          *
          * @memberOf AbstractRender
-         *
-         * FIXME remove "template"
          */
-        dirIndex(template: string, fsPath: string, fsRoot: string, items: DirItem[]): Promise<string>
+        dirIndex(fsPath: string, fsRoot: string, items: DirItem[]): Promise<string>
     }
 
     type TemplateVar = IndexParam
 
-    /**
-     * @deprecated
-     */
-    namespace EjsImpl {
-        export async function dirIndex(template: string, fsPath: string, fsRoot: string, items: DirItem[]) {
+    namespace PreactServerRendering {
+        export async function dirIndex(fsPath: string, fsRoot: string, items: DirItem[]) {
             const relPath = path.relative(fsRoot, fsPath);
             if (relPath.startsWith('..')) {
                 throw new Error(`${fsPath} is outside ${fsRoot}`);
@@ -55,25 +49,6 @@ export namespace Render {
                 }].concat(items);
             }
 
-            const interpolate: TemplateVar = {
-                title: `${relPath}/`,
-                fsPath: fsPath,
-                items: items.map(i => {
-                    const name = i.isDir ? `${i.name}/` : i.name;
-                    return {
-                        href: name,
-                        canDownload: !i.isDir,
-                        title: name,
-                        name: name,
-                    }
-                }),
-            }
-            return ejs.render(template, interpolate);
-        }
-    }
-
-    namespace PreactServerRendering {
-        export async function dirIndex(template: string, fsPath: string, fsRoot: string, items: DirItem[]) {
             return renderIndex({
                 title: `${path.relative(fsRoot, fsPath)}/`,
                 fsPath: fsPath,
@@ -90,7 +65,6 @@ export namespace Render {
         }
     }
 
-    export const Actual: AbstractRender = EjsImpl
     export const Preact: AbstractRender = PreactServerRendering
 }
 

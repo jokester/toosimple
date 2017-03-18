@@ -1,7 +1,6 @@
 import { IncomingMessage, ServerResponse } from "http";
 import * as path from "path";
 import * as url from "url";
-import * as ejs from "ejs";
 import * as formidable from "formidable";
 import * as servestatic from "serve-static";
 
@@ -149,7 +148,6 @@ namespace HandlerFactory {
      * Our handler that serves directory with custom HTML template
      */
     export function indexHTML(fs: AbstractService.FS, log: AbstractService.Log, render: AbstractService.Render, root: string): HTTPHandler {
-        const templateStr = fs.readText(path.join(__dirname, "..", "assets", "dir.ejs.html"), { encoding: 'utf-8' });
         return async (req, res, next) => {
             const urlPath = req.url;
 
@@ -162,10 +160,7 @@ namespace HandlerFactory {
                 const realPath = Helper.mappedPath(root, req.url);
                 const children = await fs.readDirDetail(realPath);
 
-                const html = await render.dirIndex(await templateStr,
-                    realPath,
-                    root,
-                    children)
+                const html = await render.dirIndex(realPath, root, children);
 
                 res.setHeader('Content-Type', 'text/html');
                 res.end(html);

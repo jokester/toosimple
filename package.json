@@ -55,7 +55,6 @@
   "homepage": "https://github.com/jokester/toosimple#readme",
   "dependencies": {
     "argparse": "^1.0.9",
-    "ejs": "^2.5.5",
     "formidable": "^1.1.1",
     "preact": "^7.2.0",
     "preact-render-to-string": "^3.6.0",
@@ -65,7 +64,6 @@
   "devDependencies": {
     "@types/argparse": "^1.0.30",
     "@types/chai": "^3.4.34",
-    "@types/ejs": "^2.3.33",
     "@types/formidable": "^1.0.29",
     "@types/node": "^6.0.60",
     "@types/serve-static": "^1.7.31",
