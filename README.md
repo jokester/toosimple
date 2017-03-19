@@ -9,7 +9,7 @@ Yet another simple-http-server
 # Features
 
 - Modern UI
-- Small in size: around `1.5M` with all dependencies.
+- Small in size: around `2M` with all dependencies.
 
 # Screenshot
 
@@ -17,13 +17,22 @@ Yet another simple-http-server
 
 # How to use
 
-```bash
+```text
 $ npm install -g toosimple
-
 $ toosimple
-listening with options: {"root":"/home/me/somewhere/","port":11131,"bind":"0.0.0.0"}
+toosimple: server started
+  root: /home/me/
+Web UI is available at the following URLs:
+  URL #1: http://[::1]:11131/
+  URL #2: http://127.0.0.1:11131/
+  URL #3: http://[fe80::1]:11131/
+  URL #4: http://[fe80::f65c:89ff:fea2:928d]:11131/
+  URL #5: http://192.168.2.203:11131/
+  URL #6: http://[2408:213:4b:7d00:f65c:89ff:fea2:928d]:11131/
+  URL #7: http://[2408:213:4b:7d00:ec4a:538:4a8c:ea0e]:11131/
+  URL #8: http://[fe80::d84e:d6ff:fe1b:f28b]:11131/
 
-// open "localhost:11131" in browser to see it
+// open "http://127.0.0.1:11131/" in browser to see it
 ```
 
 # Command Line Options
@@ -42,13 +51,6 @@ Optional arguments:
                         all interfaces.
 ```
 
-# TODO
-
-- better console output: available IPs, access logs, etc
-- permission / authentication
-- serve assets from local instead of CDN
-- download/upload with javascript for smoothness
-    - webapp with history API, when JS is available
 
 #### License
 
