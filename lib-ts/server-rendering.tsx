@@ -90,5 +90,5 @@ function head(title: string) {
 </style>
 </head>`
 
-    ]
+    ].join("");
 }
