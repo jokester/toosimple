@@ -14,7 +14,6 @@ class Greeting extends preact.Component<{}, {}> {
 
 preact.render(<Greeting />, document.body);
 
-
 namespace AJAX {
 
     export async function listDir(path: string): Promise<DirItem[]> {
@@ -30,22 +29,15 @@ namespace AJAX {
     type Dict<T> = { [key: string]: T };
     type XhrDecorator = (xhr: XMLHttpRequest) => void;
 
-    function getJSON<T>(url: string, headers?: Dict<string>): Promise<T> {
-        return getText(url, headers)
-            .then(jsonStr => JSON.parse(jsonStr) as T);
+    async function getJSON<T>(url: string, headers?: Dict<string>): Promise<T> {
+        return JSON.parse(await getText(url, headers)) as T;
     }
 
-    const setHeaders = (headers: Dict<string>) => (xhr: XMLHttpRequest) => {
-        if (headers) {
-            for (const k in headers) {
-                xhr.setRequestHeader(k, headers[k]);
-            }
-        }
-    };
-
-    function getText(url: string, headers?: Dict<string>): Promise<string> {
-        return request("GET", url, setHeaders(headers))
-            .then(xhr => xhr.responseText);
+    async function getText(url: string, headers?: Dict<string>): Promise<string> {
+        const res = await req("GET", url, headers);
+        if (res.ok && res.body)
+            return res.text();
+        throw res;
     }
 
     function request(method: string, url: string, decorator: XhrDecorator): Promise<XMLHttpRequest> {
@@ -67,6 +59,22 @@ namespace AJAX {
                 }
             };
         });
+    }
+
+
+
+    function req(method: "GET" | "POST", url: string, headers?: Dict<string>) {
+
+        const h = new Headers();
+        if (headers) for (const k in headers) {
+            h.set(k, headers[k]);
+        }
+
+        return fetch(url, {
+            method: method,
+            headers: h,
+        });
+
     }
 }
 
