@@ -1,15 +1,17 @@
 import { createParser, ParsedOptions } from "./options";
-import { createHandler } from "./http-handler";
+import { createHandler, HandlerContext } from "./http-handler";
 import * as http from "http";
 import * as os from "os";
 
-import { FS, Log, Render } from './service';
+import { FS } from "./common/io";
+import { Logger } from "./common/util/logger";
+import { Render } from "./server-rendering";
 
 /**
  *
  *
  * @param {ParsedOptions} opt
- * @returns {string[]} URLs that service is listening to (i.e. they can be used to assess this host)
+ * @returns {string[]} URLs that service is listening to (i.e. that can possibly be used to assess this host)
  */
 function getHttpUrls(opt: ParsedOptions): string[] {
     const allInterfaces = opt.bind === "::";
@@ -32,7 +34,7 @@ function getHttpUrls(opt: ParsedOptions): string[] {
                 if (addr.family === IPV4) {
                     ipAddrs.push(`http://${addr.address}:${opt.port}/`);
                 } else if (addr.family === IPV6) {
-                    ipAddrs.push(`http://[${addr.address}]:${opt.port}/`)
+                    ipAddrs.push(`http://[${addr.address}]:${opt.port}/`);
                 }
             }
         }
@@ -44,8 +46,14 @@ function getHttpUrls(opt: ParsedOptions): string[] {
 export function main() {
     const parser = createParser();
     const args = parser.parseArgs();
+
+    const ctx: HandlerContext = {
+        logger: Logger.normal,
+        fs: FS,
+        render: Render,
+    };
     http
-        .createServer(createHandler(FS.Acutal, Log.normal, Render.Preact, args.root))
+        .createServer(createHandler(ctx, args.root))
         .listen(args.port, args.bind, () => {
             console.log(`toosimple: server started`);
             console.log(`  root: ${args.root}`);
@@ -57,7 +65,7 @@ export function main() {
                 console.log(`  URL #${++addrNo}: ${addr}`);
             }
             if (addrNo === 0) {
-                console.log("  (If you are not seeing any interfaces, please check value of -b/--bind option)")
+                console.log("  (If you are not seeing any interfaces, please check value of -b/--bind option)");
             }
         });
 }

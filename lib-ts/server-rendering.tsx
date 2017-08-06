@@ -1,12 +1,61 @@
 /**
  * Components for server rendering
  */
-import * as preact from 'preact';
-import { DirItem, IndexParam } from './types';
-import { render } from 'preact-render-to-string'
-import { FileList } from './components';
+import * as preact from "preact";
+import * as path from "path";
+import { DirItem, IndexParam } from "./types";
+import { render } from "preact-render-to-string";
+import { FileList } from "./components";
 
-type IndexPageProps = IndexParam
+export interface RendererType {
+    /**
+     *
+     *
+     * @param {string} template
+     * @param {string} fsPath The dir that is being shown
+     * @param {string} fsRoot The root dir that toosimple hosts
+     * @param {DirItem[]} items
+     * @returns {Promise<string>}
+     *
+     * @memberOf AbstractRender
+     */
+    dirIndex(fsPath: string, fsRoot: string, items: DirItem[]): Promise<string>;
+}
+
+export namespace Render {
+    export async function dirIndex(fsPath: string, fsRoot: string, items: DirItem[]) {
+        const relPath = path.relative(fsRoot, fsPath);
+        if (relPath.startsWith("..")) {
+            throw new Error(`${fsPath} is outside ${fsRoot}`);
+        }
+
+        if (relPath) {
+            // when fsPath !== fsRoot, add a link to ..
+            items = [{
+                name: "..",
+                size: -1,
+                isDir: true
+            }].concat(items);
+        }
+
+        return renderIndex({
+            title: `${path.relative(fsRoot, fsPath)}/`,
+            fsPath: fsPath,
+            items: items.map(i => {
+                const name = i.isDir ? `${i.name}/` : i.name;
+                return {
+                    href: name,
+                    canDownload: !i.isDir,
+                    title: name,
+                    name: name,
+                };
+            })
+        });
+    }
+}
+
+
+type IndexPageProps = IndexParam;
 
 class IndexPage extends preact.Component<IndexPageProps, {}> {
     render(props: IndexPageProps) {
@@ -41,7 +90,7 @@ class IndexPage extends preact.Component<IndexPageProps, {}> {
 }
 
 export function renderIndex(props: IndexPageProps) {
-    const index = <IndexPage {...props} />
+    const index = <IndexPage {...props} />;
     return [
         `<!DOCTYPE html>
 <html lang="en-US">`,

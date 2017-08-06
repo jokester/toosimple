@@ -1,8 +1,25 @@
-# TODO
+# TODO (features)
 
-- add an option for logging verbosity
-- add an option to disable uploading
-- add an option to silently discard uploaded file
+- [x] Server-generated file index
+    - Like `SimpleHTTPServer` in Python, or `Rack::Directory` in Ruby
+- [x] Upload
+    - Trivial `<form>` POST
+- [ ] HTTPS support
+    - Generate self-signed HTTPS cert on the fly
+    - Optionally accepts a root cert
+- [ ] SPA with browser-side rendering
+    - Use AJAX to fetch index & upload file
+    - Route
+- [ ] File Change Notification
+    - Update page when new file is created on server side
+    - Maybe with WebSocket
+- [ ] Enhanced Test
+    - Jest and something
+
+# TODO (minor)
+
+- add an option to enable / disable uploading
+- add an option to silently discard uploaded file (for demo purpose)
 - add an option to prevent file overwriting
 - add an option to disable symlink resoling
 - create a logo

@@ -2,21 +2,21 @@
  * Types shared by frontend / backend
  */
 export interface DirItem {
-    name: string
-    size: number
-    isDir: boolean
+    name: string;
+    size: number;
+    isDir: boolean;
 }
 
 /**
- *
+ * I
  */
 export interface IndexParam {
-    title: string
-    fsPath: string
+    title: string;
+    fsPath: string;
     items: {
-        href: string
-        canDownload: boolean
-        title: string
-        name: string
-    }[]
+        href: string;
+        canDownload: boolean;
+        title: string;
+        name: string;
+    }[];
 }

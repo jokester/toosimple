@@ -63,5 +63,5 @@ if (require.main === module) {
     const args = parser.parseArgs();
     console.log("parsed");
     console.log(args);
-    console.log(JSON.stringify(args));
+    console.log(JSON.stringify(args, undefined, 4));
 }

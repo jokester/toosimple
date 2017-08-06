@@ -4,13 +4,14 @@
   "description": "Yet another simple-http-server",
   "main": "index.js",
   "scripts": {
-    "start": "node lib/index.js",
+    "start": "   node    lib/index.js",
     "start:ts": "ts-node lib-ts/index.ts",
-    "build": "rm -rf lib/* && tsc",
-    "watch": "rm -rf lib/* && tsc --watch",
+    "build": "      rm -rf lib/* && tsc",
+    "build:watch": "rm -rf lib/* && tsc --watch",
     "test:ts": "                    nyc mocha --opts mocha-ts.opts || true",
     "test": "rm -rf lib/* && tsc && nyc mocha --opts mocha-js.opts || true",
-    "tslint": "tslint -c tslint.json ts-lib/**/*.ts",
+    "tslint": "    tslint -c tslint.json       'lib-ts/**/*.ts?(x)'",
+    "tslint:fix": "tslint -c tslint.json --fix 'lib-ts/**/*.ts?(x)'",
     "webpack:prod": "webpack --config webpack/browser-prod.js",
     "webpack:dev": "webpack --config webpack/browser-dev.js"
   },
@@ -20,6 +21,7 @@
   },
   "keywords": [
     "nodejs",
+    "simple-http-server",
     "file server",
     "TypeScript"
   ],
@@ -50,36 +52,64 @@
     "instrument": true
   },
   "engines": {
-    "node": ">= 4.0.0"
+    "node": ">= 6.0.0"
   },
   "homepage": "https://github.com/jokester/toosimple#readme",
   "dependencies": {
     "argparse": "^1.0.9",
     "es6-shim": "^0.35.3",
     "formidable": "^1.1.1",
-    "preact": "^7.2.0",
-    "preact-render-to-string": "^3.6.0",
-    "serve-static": "^1.11.2",
-    "tslib": "^1.5.0"
+    "preact": "^8.2.1",
+    "lodash": "^4.17.4",
+    "preact-render-to-string": "^3.6.3",
+    "serve-static": "^1.12.3",
+    "tslib": "^1.7.1"
   },
   "devDependencies": {
     "@types/argparse": "^1.0.30",
-    "@types/chai": "^3.4.34",
-    "@types/es6-shim": "^0.31.33",
+    "@types/chai": "^4.0.1",
+    "@types/es6-shim": "^0.31.34",
     "@types/formidable": "^1.0.29",
-    "@types/node": "^6.0.60",
+    "@types/jest": "^20.0.5",
+    "@types/lodash": "^4.14.71",
+    "@types/node": "^8.0.17",
     "@types/serve-static": "^1.7.31",
-    "babili-webpack-plugin": "0.0.11",
-    "chai": "^3.5.0",
-    "mocha": "^3.2.0",
-    "mocha-typescript": "^1.0.15",
-    "nyc": "^10.1.2",
-    "ts-loader": "^2.0.0",
-    "ts-node": "^2.0.0",
-    "tslint": "^4.4.2",
-    "typescript": "^2.2.0",
-    "webpack": "^2.2.1",
-    "webpack-merge": "^2.6.1",
-    "webpack-visualizer-plugin": "^0.1.10"
+    "babili-webpack-plugin": "0.1.2",
+    "chai": "^4.1.0",
+    "jest": "^20.0.4",
+    "ts-jest": "^20.0.7",
+    "ts-loader": "^2.3.2",
+    "ts-node": "^3.3.0",
+    "tslint": "^5.5.0",
+    "typescript": "^2.4.2",
+    "webpack": "^3.4.1",
+    "webpack-dev-server": "^2.6.1",
+    "webpack-merge": "^4.1.0",
+    "webpack-visualizer-plugin": "^0.1.11"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "roots": [
+      "lib-ts",
+      "lib"
+    ],
+    "testMatch": [
+      "/**/__test__/*.(ts|js|tsx|jsx)",
+      "\\.(spec|test)\\.(ts|js|tsx|jsx)$"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx"
+    ],
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "html"
+    ]
   }
 }

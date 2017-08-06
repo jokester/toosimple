@@ -1,4 +1,4 @@
-import * as preact from 'preact';
+import * as preact from "preact";
 
 interface DirItemProps {
     item: {
@@ -6,7 +6,7 @@ interface DirItemProps {
         canDownload: boolean
         title: string
         name: string
-    }
+    };
 }
 
 export class DirItem extends preact.Component<DirItemProps, {}> {
@@ -27,7 +27,7 @@ interface FileListProps {
         canDownload: boolean
         title: string
         name: string
-    }[]
+    }[];
 }
 
 export class FileList extends preact.Component<FileListProps, {}> {
@@ -37,12 +37,12 @@ export class FileList extends preact.Component<FileListProps, {}> {
             <ul>
                 {this.props.items.map((item, k) => <DirItem item={item} key={k} />)}
             </ul>
-        )
+        );
     }
 }
 
 class FileNavigator extends preact.Component<{}, {}> {
     render() {
-        return <p>ho</p>
+        return <p>ho</p>;
     }
 }

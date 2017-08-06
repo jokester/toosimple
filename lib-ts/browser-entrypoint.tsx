@@ -1,9 +1,9 @@
 /**
  *
  */
-import * as preact from 'preact';
-import { DirItem, IndexParam } from './types';
-import { render } from 'preact-render-to-string'
+import * as preact from "preact";
+import { DirItem, IndexParam } from "./types";
+import { render } from "preact-render-to-string";
 
 class Greeting extends preact.Component<{}, {}> {
     render() {
@@ -17,7 +17,7 @@ preact.render(<Greeting />, document.body);
 namespace AJAX {
 
     export async function listDir(path: string): Promise<DirItem[]> {
-        return getJSON<DirItem[]>(path, { 'X-toosimple-api': "listDir" });
+        return getJSON<DirItem[]>(path, { "X-toosimple-api": "listDir" });
     }
 
     export async function uploadFile(file: File, destPath: string): Promise<void> {
@@ -40,7 +40,7 @@ namespace AJAX {
                 xhr.setRequestHeader(k, headers[k]);
             }
         }
-    }
+    };
 
     function getText(url: string, headers?: Dict<string>): Promise<string> {
         return request("GET", url, setHeaders(headers))
@@ -64,8 +64,8 @@ namespace AJAX {
                         reject(xhr);
                     }
                 }
-            }
-        })
+            };
+        });
     }
 }
 

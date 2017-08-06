@@ -2,7 +2,7 @@
 
 <!-- TODO logo -->
 
-Yet another simple-http-server
+Yet another simple-http-server to host static files.
 
 [![npm version](https://badge.fury.io/js/toosimple.svg)](https://www.npmjs.com/package/toosimple)
 
@@ -38,6 +38,7 @@ Web UI is available at the following URLs:
 # Command Line Options
 
 ```
+$ toosimple -h
 usage: toosimple [-h] [-v] [-r PATH] [-p PORT] [-b IP]
 
 toosimple: Yet another simple-http-server
@@ -51,6 +52,10 @@ Optional arguments:
                         all interfaces.
 ```
 
+# Why another simple-http-server?
+
+It is a intended overkill: I wanted to see how a static file server performs,
+after enhanced by "modern" technologies (SPA, server-push, etc).
 
 #### License
 
