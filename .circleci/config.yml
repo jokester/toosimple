@@ -1,15 +1,15 @@
 version: 2
 jobs:
-  checkout:
-    post:
-        - git submodule sync
-        - git submodule update --init
   build:
     working_directory: ~/toosimple
     docker:
       - image: circleci/node:6-stretch-browsers
     steps:
       - checkout
+
+      - run:
+          name: checkout git submodule
+          command: git submodule sync && git submodule update --init
 
       - restore_cache:
           key: dependency-cache-yarn-{{ checksum "yarn.lock" }}
