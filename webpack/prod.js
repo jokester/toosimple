@@ -4,19 +4,11 @@
 const webpackMerge = require("webpack-merge");
 const path = require("path");
 const webpack = require("webpack");
-const BabiliPlugin = require("babili-webpack-plugin");
+const MinifyPlugin = require("babel-minify-webpack-plugin");
 
 module.exports = webpackMerge([
   require("./common"),
   {
-    entry: {
-      "browser-entrypoint": path.join(
-        __dirname,
-        "..",
-        "lib-ts",
-        "browser-entrypoint.tsx"
-      )
-    },
     output: {
       path: path.join(__dirname, "..", "prod"),
       filename: "[name].min.js",
@@ -29,16 +21,17 @@ module.exports = webpackMerge([
           NODE_ENV: JSON.stringify("production")
         },
       }),
-      new BabiliPlugin({}),
-      /* disable uglifyJS in favor of babili, for ES6 support */
-      null &&
-        new webpack.optimize.UglifyJsPlugin({
-          minimize: true,
-          compress: {
-            warnings: true,
-            drop_console: false
-          }
-        })
-    ].filter(v => !!v)
+      new MinifyPlugin({}),
+      new webpack.optimize.ModuleConcatenationPlugin(),
+      /* disable uglifyJS in favor of babili, for ES6 support
+      new webpack.optimize.UglifyJsPlugin({
+        minimize: true,
+        compress: {
+          warnings: true,
+          drop_console: false
+        }
+      })
+      */
+    ]
   }
 ]);
