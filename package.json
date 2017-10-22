@@ -40,21 +40,6 @@
     "lib/**/*"
   ],
   "bin": "./bin/toosimple",
-  "nyc": {
-    "extension": [
-      ".ts",
-      ".tsx",
-      ".js",
-      ".jsx"
-    ],
-    "reporter": [
-      "text-summary",
-      "html"
-    ],
-    "cache": false,
-    "sourceMap": false,
-    "instrument": true
-  },
   "engines": {
     "node": ">= 6.0.0"
   },
