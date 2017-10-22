@@ -1,8 +1,9 @@
 /**
- *
+ * code that will be executed from browser
  */
 import * as preact from "preact";
 import { DirItem, IndexParam } from "./types";
+
 import { render } from "preact-render-to-string";
 
 class Greeting extends preact.Component<{}, {}> {

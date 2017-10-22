@@ -1,11 +1,12 @@
-import { createParser, ParsedOptions } from "./options";
-import { createHandler, HandlerContext } from "./http-handler";
 import * as http from "http";
 import * as os from "os";
 
 import { FS } from "./common/io";
 import { Logger } from "./common/util/logger";
-import { Render } from "./server-rendering";
+
+import { createParser, ParsedOptions } from "./options";
+import { createHandler, HandlerContext } from "./server";
+import { defaultRenderer } from "./server/server-rendering";
 
 /**
  *
@@ -47,11 +48,15 @@ export function main() {
     const parser = createParser();
     const args = parser.parseArgs();
 
+    const logger = args.verbose ? Logger.debug : Logger.normal;
+
     const ctx: HandlerContext = {
-        logger: Logger.normal,
+        options: args,
+        logger,
         fs: FS,
-        render: Render,
+        renderer: defaultRenderer,
     };
+
     http
         .createServer(createHandler(ctx, args.root))
         .listen(args.port, args.bind, () => {

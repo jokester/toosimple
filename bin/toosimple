@@ -7,5 +7,5 @@
  */
 "use strict";
 
-const main = require('../lib').main;
+const main = require('../lib/cli').main;
 main();

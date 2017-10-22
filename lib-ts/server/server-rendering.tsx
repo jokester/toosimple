@@ -3,27 +3,31 @@
  */
 import * as preact from "preact";
 import * as path from "path";
-import { DirItem, IndexParam } from "./types";
+import { DirItem, IndexParam } from "../types";
 import { render } from "preact-render-to-string";
-import { FileList } from "./components";
+import { DirList } from "../components";
 
-export interface RendererType {
+/**
+ *
+ * Renderer: functions to render html at server side
+ *
+ * @export
+ * @interface Renderer
+ */
+export interface Renderer {
     /**
-     *
-     *
-     * @param {string} template
      * @param {string} fsPath The dir that is being shown
      * @param {string} fsRoot The root dir that toosimple hosts
      * @param {DirItem[]} items
-     * @returns {Promise<string>}
+     * @returns {Promise<string>} a html string
      *
-     * @memberOf AbstractRender
      */
-    dirIndex(fsPath: string, fsRoot: string, items: DirItem[]): Promise<string>;
+    dirIndex(fsPath: string, fsRoot: string, items: DirItem[]): string;
 }
 
-export namespace Render {
-    export async function dirIndex(fsPath: string, fsRoot: string, items: DirItem[]) {
+export const defaultRenderer: Readonly<Renderer> = {
+    dirIndex: function (fsPath: string, fsRoot: string, items: DirItem[]) {
+        /* FIXME: the functionality of 'add ..' should be moved to somewhere else */
         const relPath = path.relative(fsRoot, fsPath);
         if (relPath.startsWith("..")) {
             throw new Error(`${fsPath} is outside ${fsRoot}`);
@@ -52,44 +56,41 @@ export namespace Render {
             })
         });
     }
-}
-
+};
 
 type IndexPageProps = IndexParam;
 
-class IndexPage extends preact.Component<IndexPageProps, {}> {
-    render(props: IndexPageProps) {
-        return (
-            <body class="hack dark-grey">
-                <div class="main container grid">
-                    <div id="file-list" class="cell -8of12">
-                        <h1>Files</h1>
-                        <h3>{props.fsPath}</h3>
-                        <FileList items={props.items} />
-                    </div>
-
-                    <div id="upload-box" class="cell -4of12">
-                        <h1>Upload</h1>
-                        <form method="POST" encType="multipart/form-data">
-                            <p>
-                                <input type="file" name="file1" multiple />
-                            </p>
-                            <input type="submit" value="Upload" />
-                        </form>
-                    </div>
-
+function IndexPage(props: IndexParam) {
+    return (
+        <body class="hack dark-grey">
+            <div class="main container grid">
+                <div id="file-list" class="cell -8of12">
+                    <h1>Files</h1>
+                    <h3>{props.fsPath}</h3>
+                    <DirList items={props.items} />
                 </div>
 
-                <div id="footer">
-                    <h6>Powered by <a href="https://github.com/jokester/toosimple">jokester/toosimple</a>
-                    </h6>
+                <div id="upload-box" class="cell -4of12">
+                    <h1>Upload</h1>
+                    <form method="POST" encType="multipart/form-data">
+                        <p>
+                            <input type="file" name="file1" multiple />
+                        </p>
+                        <input type="submit" value="Upload" />
+                    </form>
                 </div>
-            </body>
-        );
-    }
+
+            </div>
+
+            <div id="footer">
+                <h6>Powered by <a href="https://github.com/jokester/toosimple">jokester/toosimple</a>
+                </h6>
+            </div>
+        </body>
+    );
 }
 
-export function renderIndex(props: IndexPageProps) {
+function renderIndex(props: IndexPageProps) {
     const index = <IndexPage {...props} />;
     return [
         `<!DOCTYPE html>

@@ -9,6 +9,8 @@ export interface ParsedOptions {
      * @see https://github.com/nodejs/node/issues/7200
      */
     bind: string;
+    verbose: boolean;
+    allowUpload: boolean;
 }
 
 export function createParser() {
@@ -50,13 +52,33 @@ export function createParser() {
         }
     );
 
+    parser.addArgument(
+        ["--verbose"],
+        {
+            defaultValue: false,
+            help: "Enable verbose log, useful when debugging",
+            dest: "verbose",
+            action: "storeTrue"
+        }
+    );
+
+    parser.addArgument(
+        ["-u", "--allow-upload"],
+        {
+            defaultValue: false,
+            help: "Allow files to be uploaded",
+            dest: "allowUpload",
+            action: "storeTrue"
+        }
+    );
+
     return parser as {
         parseArgs(): ParsedOptions
     };
 }
 
 /**
- * Run this file with node / ts-node to test output of parser
+ * When this file is directly executed (node / ts-node), test output of parser
  */
 if (require.main === module) {
     const parser = createParser();
