@@ -103,7 +103,7 @@ namespace HandlerFactory {
                 } else {
                     res.statusCode = 500;
                 }
-            };
+            }
         };
     }
 
@@ -277,4 +277,4 @@ export function createHandler(ctx: HandlerContext, fsRoot: string) {
         // last handler that always return 500
         HandlerFactory.failedHandler(ctx.logger),
     ]);
-};
+}
