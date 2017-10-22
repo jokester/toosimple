@@ -252,8 +252,11 @@ namespace HandlerFactory {
      */
     export function failedHandler(log: LoggerType): HTTPHandler {
         return (req, res, next) => {
-            res.statusCode = 500;
-            res.end();
+            log.error("");
+            try {
+                res.statusCode = 500;
+                res.end();
+            } catch (e) { }
         };
     }
 }
