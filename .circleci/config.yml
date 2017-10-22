@@ -5,7 +5,10 @@ jobs:
     docker:
       - image: circleci/node:6-stretch-browsers
     steps:
-      - checkout
+      - checkout:
+          post:
+              - git submodule sync
+              - git submodule update --init
 
       - restore_cache:
           key: dependency-cache-yarn-{{ checksum "yarn.lock" }}
