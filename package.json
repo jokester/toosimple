@@ -37,7 +37,7 @@
   "files": [
     "bin",
     "assets",
-    "lib/*.js"
+    "lib/**/*"
   ],
   "bin": "./bin/toosimple",
   "nyc": {
