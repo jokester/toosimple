@@ -88,6 +88,8 @@ namespace HandlerFactory {
      * @returns {HTTPHandler}
      */
     export function combine(log: LoggerType, handlers: HTTPHandler[]): HTTPHandler {
+        handlers = handlers.filter(h => !!h);
+
         return (req, res, next) => {
             let handlerTried = 0;
             tryHandler(0);
@@ -174,6 +176,7 @@ namespace HandlerFactory {
      */
     export function staticHandler(root: string): HTTPHandler {
         return servestatic(root, {
+            /** FIXME:  */
             dotfiles: "allow",
             index: false,
         });
@@ -263,11 +266,14 @@ namespace HandlerFactory {
 
 export function createHandler(ctx: HandlerContext, fsRoot: string) {
 
+    // HandlerFactory.assetHandler(),
     return HandlerFactory.combine(ctx.logger, [
 
         HandlerFactory.rejectDangerousPath(ctx.logger),
 
         HandlerFactory.decodeReqURL(ctx.logger),
+
+        // HandlerFactory.assetHandler(),
 
         HandlerFactory.dumpReq(ctx.logger),
 
@@ -278,8 +284,11 @@ export function createHandler(ctx: HandlerContext, fsRoot: string) {
 
         // TODO serve assets (JS/CSS) or embed them in html
 
-        // HandlerFactory.assetHandler(),
+
+        // FIXME: enable/disable upload control
         HandlerFactory.formUploadHandler(ctx.fs, ctx.logger, fsRoot),
+
+        // TODO: ajax (FormData) upload handler
 
         // only use ecstatic for files
         HandlerFactory.staticHandler(fsRoot),

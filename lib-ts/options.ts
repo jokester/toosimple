@@ -11,6 +11,10 @@ export interface ParsedOptions {
     bind: string;
     verbose: boolean;
     allowUpload: boolean;
+    // TODO: a option to reject access to dotfiles
+    hideDotfiles: boolean;
+    // TODO: a option for index filenames
+    indexFilename: string[];
 }
 
 export function createParser() {
