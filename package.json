@@ -56,7 +56,7 @@
   "dependencies": {
     "argparse": "^1.0.9",
     "es6-shim": "^0.35.3",
-    "formidable": "^1.1.1",
+    "formidable": "^3.2.4",
     "preact": "^7.2.0",
     "preact-render-to-string": "^3.6.0",
     "serve-static": "^1.11.2",
